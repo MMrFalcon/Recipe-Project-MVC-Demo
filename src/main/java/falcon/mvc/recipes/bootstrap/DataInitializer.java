@@ -68,10 +68,10 @@ public class DataInitializer implements ApplicationListener<ContextRefreshedEven
 
         recipe.setCategories(categories);
 
-        recipe.getIngredients().add(new Ingredient("Avocado", new BigDecimal(2), each, recipe));
-        recipe.getIngredients().add(new Ingredient("Salt", new BigDecimal(1), pinch, recipe));
-        recipe.getIngredients().add(new Ingredient("Chili pepper", new BigDecimal(3), each, recipe));
-        recipe.getIngredients().add(new Ingredient("Oil", new BigDecimal(1), tablespoon, recipe));
+        recipe.addIngredient(new Ingredient("Avocado", new BigDecimal(2), each));
+        recipe.addIngredient(new Ingredient("Salt", new BigDecimal(1), pinch));
+        recipe.addIngredient(new Ingredient("Chili pepper", new BigDecimal(3), each));
+        recipe.addIngredient(new Ingredient("Oil", new BigDecimal(1), tablespoon));
 
 
         recipes.add(recipe);
@@ -99,11 +99,11 @@ public class DataInitializer implements ApplicationListener<ContextRefreshedEven
 
        recipe2.getCategories().add(categoryService.getByDescription("Mexican"));
 
-       recipe2.getIngredients().add(new Ingredient("Avocado", new BigDecimal(4), each, recipe2));
-       recipe2.getIngredients().add(new Ingredient("Salt", new BigDecimal(2), pinch, recipe2));
-       recipe2.getIngredients().add(new Ingredient("Chili pepper", new BigDecimal(3), each, recipe2));
-       recipe2.getIngredients().add(new Ingredient("Oil", new BigDecimal(1), tablespoon, recipe2));
-       recipe2.getIngredients().add(new Ingredient("Flour", new BigDecimal(5), teaspoon, recipe2));
+       recipe2.addIngredient(new Ingredient("Avocado", new BigDecimal(4), each));
+       recipe2.addIngredient(new Ingredient("Salt", new BigDecimal(2), pinch));
+       recipe2.addIngredient(new Ingredient("Chili pepper", new BigDecimal(3), each));
+       recipe2.addIngredient(new Ingredient("Oil", new BigDecimal(1), tablespoon));
+       recipe2.addIngredient(new Ingredient("Flour", new BigDecimal(5), teaspoon));
 
        recipes.add(recipe2);
 
