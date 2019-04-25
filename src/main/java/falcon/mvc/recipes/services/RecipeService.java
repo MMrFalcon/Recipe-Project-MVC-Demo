@@ -1,12 +1,12 @@
 package falcon.mvc.recipes.services;
 
 import falcon.mvc.recipes.domains.Recipe;
-import falcon.mvc.recipes.repositories.RecipeRepository;
 
 import java.util.List;
+import java.util.Set;
 
-public interface RecipeService extends BaseService<Recipe, Long, RecipeRepository> {
-    List<Recipe> getAllRecipes();
+public interface RecipeService {
+    Set<Recipe> getAllRecipes();
     Recipe createRecipe(Recipe recipe);
     Iterable<Recipe> createRecipes(List<Recipe> recipes);
 }

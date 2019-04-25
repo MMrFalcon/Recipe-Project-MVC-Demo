@@ -1,8 +1,7 @@
 package falcon.mvc.recipes.services;
 
 import falcon.mvc.recipes.domains.Ingredient;
-import falcon.mvc.recipes.repositories.IngredientRepository;
 
-public interface IngredientService extends BaseService<Ingredient, Long, IngredientRepository> {
+public interface IngredientService {
     Ingredient getByName(String name);
 }

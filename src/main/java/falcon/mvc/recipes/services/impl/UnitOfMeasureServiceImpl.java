@@ -1,9 +1,12 @@
-package falcon.mvc.recipes.services;
+package falcon.mvc.recipes.services.impl;
 
 import falcon.mvc.recipes.domains.UnitOfMeasure;
 import falcon.mvc.recipes.repositories.UnitOfMeasureRepository;
+import falcon.mvc.recipes.services.UnitOfMeasureService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class UnitOfMeasureServiceImpl implements UnitOfMeasureService {
 
@@ -17,6 +20,7 @@ public class UnitOfMeasureServiceImpl implements UnitOfMeasureService {
     @Override
     public UnitOfMeasure getByUnit(String unit) {
         if (unitOfMeasureRepository.findByUnit(unit).isPresent()) {
+            log.debug("Searching for unit of measure with name " + unit);
             return unitOfMeasureRepository.findByUnit(unit).get();
         }else {
             throw new RuntimeException("No such Unit of Measure!");
@@ -25,6 +29,7 @@ public class UnitOfMeasureServiceImpl implements UnitOfMeasureService {
 
     @Override
     public UnitOfMeasure createUnit(UnitOfMeasure unit) {
+        log.debug("Saving new unit of measure " + unit);
         return unitOfMeasureRepository.save(unit);
     }
 }

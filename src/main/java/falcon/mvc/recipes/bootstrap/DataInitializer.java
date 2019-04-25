@@ -5,9 +5,11 @@ import falcon.mvc.recipes.services.CategoryService;
 import falcon.mvc.recipes.services.IngredientService;
 import falcon.mvc.recipes.services.RecipeService;
 import falcon.mvc.recipes.services.UnitOfMeasureService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -15,6 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Slf4j
 @Component
 public class DataInitializer implements ApplicationListener<ContextRefreshedEvent> {
 
@@ -31,7 +34,9 @@ public class DataInitializer implements ApplicationListener<ContextRefreshedEven
     }
 
     @Override
+    @Transactional
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
+        log.debug("Loading data on starts up");
         recipeService.createRecipes(recipesInitialization());
     }
     private List<Recipe> recipesInitialization() {
@@ -41,11 +46,12 @@ public class DataInitializer implements ApplicationListener<ContextRefreshedEven
         Byte[] mockImg = new Byte[1];
         mockImg[0] = 1;
 
-        //Unit of measure
         UnitOfMeasure each = unitOfMeasureService.getByUnit("each");
         UnitOfMeasure pinch= unitOfMeasureService.getByUnit("pinch");
         UnitOfMeasure tablespoon = unitOfMeasureService.getByUnit("tablespoon");
         UnitOfMeasure teaspoon = unitOfMeasureService.getByUnit("teaspoon");
+        log.debug(String.valueOf(unitOfMeasureService));
+        log.debug(each.getUnit() + "," + pinch.toString());
         //Guacamole
         Recipe recipe = new Recipe();
         recipe.setPrepTime(30);
@@ -55,6 +61,7 @@ public class DataInitializer implements ApplicationListener<ContextRefreshedEven
         recipe.setDirection("Direction");
         recipe.setImg(mockImg);
         recipe.setServings(30);
+
 
         Notes guacamoleNotes = new Notes();
         guacamoleNotes.setDescription("can informally be referred tae \nas \"guac\" in North Americae)" +
