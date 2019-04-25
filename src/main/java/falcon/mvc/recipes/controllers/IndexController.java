@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/")
 public class IndexController {
 
-
     private RecipeService recipeService;
 
     public IndexController(RecipeService recipeService) {
