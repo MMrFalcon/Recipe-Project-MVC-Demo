@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Slf4j
@@ -38,6 +39,16 @@ public class RecipeServiceImpl implements RecipeService {
     public Iterable<Recipe> createRecipes(List<Recipe> recipes) {
         log.debug("Saving list of Recipes " + recipes);
         return recipeRepository.saveAll(recipes);
+    }
+
+    @Override
+    public Recipe getById(Long id) {
+        Optional<Recipe> recipe = recipeRepository.findById(id);
+        log.debug("Searching for recipe with id: "+id);
+        if (!recipe.isPresent())
+            throw new RuntimeException("Recipe not found");
+        log.debug("Recipe was found: " + recipe.get());
+        return recipe.get();
     }
 
 }

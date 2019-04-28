@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css} "/>
+    <script th:href="@{/webjars/jquery/3.4.0/jquery.min.js} "></script>
+    <title>Recipe List</title>
+</head>
+<body>
+
+<div class="jumbotron">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="card card-primary">
+                    <!--/*@thymesVar id="description" type="falcon.mvc.recipes.domains"*/-->
+                    <div class="card-header">
+                        <h1 class="panel-title text-center" th:text="${recipe.description}">Description</h1>
+                    </div>
+                    <div class="card-block">
+                        <div class="row justify-content-center">
+                            <th:block th:each="category:${recipe.categories}">
+                                <button type="button" class="btn btn-outline-success mt-3 mb-3"
+                                        th:text="${category.description}+'&nbsp;'"></button>&nbsp;
+                            </th:block>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h2 class="text-center"
+                            th:text="'Difficult:&nbsp;' + ${recipe.difficulty} + ',&nbsp;Preparing Time:&nbsp;' +
+                        ${recipe.prepTime} +  ',&nbsp;Cook Time:&nbsp;' + ${recipe.cookTime}"></h2>
+                    </div>
+                    <div class="card-body">
+                        <ul th:each="ingredient:${recipe.ingredients}">
+                            <li><h3 th:text="${ingredient.name}+'&nbsp;'+
+                                ${ingredient.amount}+'&nbsp;'+${ingredient.unitOfMeasure.unit}">ingredient</h3></li>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h1 class="panel-title" th:text="'Notes'"></h1>
+                    </div>
+                    <div class="card-body">
+                        <p th:text="${recipe.notes.description}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mt-3">
+     <a class="btn btn-outline-secondary" th:text="'Home Page'"
+        th:href="@{'/index'}">Secondary</a>
+    </div>
+</div>
+</body>
+</html>

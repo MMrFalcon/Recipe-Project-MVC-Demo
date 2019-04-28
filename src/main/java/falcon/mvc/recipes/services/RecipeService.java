@@ -9,4 +9,5 @@ public interface RecipeService {
     Set<Recipe> getAllRecipes();
     Recipe createRecipe(Recipe recipe);
     Iterable<Recipe> createRecipes(List<Recipe> recipes);
+    Recipe getById(Long id);
 }

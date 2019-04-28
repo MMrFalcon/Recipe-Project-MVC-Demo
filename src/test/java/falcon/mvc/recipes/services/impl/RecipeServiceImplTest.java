@@ -3,16 +3,16 @@ package falcon.mvc.recipes.services.impl;
 import falcon.mvc.recipes.domains.*;
 import falcon.mvc.recipes.repositories.RecipeRepository;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.*;
 
 public class RecipeServiceImplTest {
@@ -80,5 +80,36 @@ public class RecipeServiceImplTest {
 
         assertEquals(createdRecipes,savedRecipes);
         verify(recipeRepository,times(2)).saveAll(recipes);
+    }
+
+    @Test
+    public void getById() {
+        Recipe recipe = new Recipe();
+        recipe.setId(1L);
+        Optional<Recipe> recipeOptional = Optional.of(recipe);
+
+        when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+
+        Recipe recipeReturned = recipeService.getById(1L);
+
+        assertNotNull(recipeReturned);
+        verify(recipeRepository, times(1)).findById(anyLong());
+        verify(recipeRepository, never()).findAll();
+    }
+
+    @Rule
+    public ExpectedException exceptionRule = ExpectedException.none();
+
+    @Test
+    public void getByIdNotPresent() {
+        final String exceptionMessage = "Recipe not found";
+        exceptionRule.expect(RuntimeException.class);
+        exceptionRule.expectMessage(exceptionMessage);
+        Recipe recipe = new Recipe();
+        recipe.setId(1L);
+        Optional<Recipe> recipeOptional = Optional.of(recipe);
+
+        when(recipeRepository.findById(1L)).thenReturn(recipeOptional);
+        recipeService.getById(2L);
     }
 }
