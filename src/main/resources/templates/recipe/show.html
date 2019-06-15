@@ -16,7 +16,7 @@
         <div class="row justify-content-center">
             <div class="col-md-10">
                 <div class="card card-primary">
-                    <!--/*@thymesVar id="description" type="falcon.mvc.recipes.domains"*/-->
+                    <!--/*@thymesVar id="recipeNotes" type="falcon.mvc.recipes.domains"*/-->
                     <div class="card-header">
                         <h1 class="panel-title text-center" th:text="${recipe.description}">Description</h1>
                     </div>
@@ -56,7 +56,7 @@
                         <h1 class="panel-title" th:text="'Notes'"></h1>
                     </div>
                     <div class="card-body">
-                        <p th:text="${recipe.notes.description}"></p>
+                        <p th:text="${recipe.notes.recipeNotes}"></p>
                     </div>
                 </div>
             </div>

@@ -12,9 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Slf4j
@@ -39,9 +37,9 @@ public class DataInitializer implements ApplicationListener<ContextRefreshedEven
         log.debug("Loading data on starts up");
         recipeService.createRecipes(recipesInitialization());
     }
-    private List<Recipe> recipesInitialization() {
+    private Set<Recipe> recipesInitialization() {
 
-        List<Recipe> recipes = new ArrayList<>();
+        Set<Recipe> recipes = new HashSet<>();
 
         Byte[] mockImg = new Byte[1];
         mockImg[0] = 1;
@@ -58,13 +56,12 @@ public class DataInitializer implements ApplicationListener<ContextRefreshedEven
         recipe.setCookTime(0);
         recipe.setDescription("Guacamole");
         recipe.setDifficulty(Difficulty.EASY);
-        recipe.setDirection("Direction");
         recipe.setImg(mockImg);
         recipe.setServings(30);
 
 
         Notes guacamoleNotes = new Notes();
-        guacamoleNotes.setDescription("can informally be referred tae \nas \"guac\" in North Americae)" +
+        guacamoleNotes.setRecipeNotes("can informally be referred tae \nas \"guac\" in North Americae)" +
                 " \n is an avocado-based dip or salad\nfirst created by the Aztecs in whit is nou Mexico..");
         guacamoleNotes.setRecipe(recipe);
         recipe.setNotes(guacamoleNotes);
@@ -90,12 +87,11 @@ public class DataInitializer implements ApplicationListener<ContextRefreshedEven
         recipe2.setCookTime(0);
         recipe2.setDescription("Tacos");
         recipe2.setDifficulty(Difficulty.MODERATE);
-        recipe2.setDirection("Direction");
         recipe2.setImg(mockImg);
         recipe2.setServings(60);
 
         Notes tacoNotes = new Notes();
-        tacoNotes.setDescription("Is a traditional Mexican dish consisting\nof a corn or wheat tortilla " +
+        tacoNotes.setRecipeNotes("Is a traditional Mexican dish consisting\nof a corn or wheat tortilla " +
                 "\nfolded or rolled around a filling.\nA taco can be made with a variety of fillings," +
                 "\nincluding beef, pork, chicken,\nseafood, vegetables, and cheese, allowing great " +
                 "\nversatility and variety.\nTacos are generally eaten without utensils, " +

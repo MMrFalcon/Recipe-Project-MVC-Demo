@@ -26,7 +26,7 @@ public class CategoryTest {
 
     @Test
     public void getDescription() {
-        String description = "Example of description";
+        String description = "Example of recipeNotes";
         category.setDescription(description);
         assertEquals(description, category.getDescription());
     }
