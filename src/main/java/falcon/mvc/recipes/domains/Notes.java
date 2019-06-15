@@ -16,7 +16,7 @@ public class Notes {
     private Long id;
 
     @Lob
-    private String description;
+    private String recipeNotes;
 
     @OneToOne
     private Recipe recipe;
