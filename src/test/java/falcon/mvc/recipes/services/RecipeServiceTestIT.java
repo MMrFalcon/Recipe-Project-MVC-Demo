@@ -2,7 +2,6 @@ package falcon.mvc.recipes.services;
 
 import falcon.mvc.recipes.commands.NotesCommand;
 import falcon.mvc.recipes.commands.RecipeCommand;
-import falcon.mvc.recipes.converters.RecipeCommandToRecipe;
 import falcon.mvc.recipes.converters.RecipeToRecipeCommand;
 import falcon.mvc.recipes.domains.Notes;
 import falcon.mvc.recipes.domains.Recipe;
@@ -30,16 +29,13 @@ public class RecipeServiceTestIT {
     private static final String NEW_DESCRIPTION = "New Description";
 
     @Autowired
-    RecipeService recipeService;
+    private RecipeService recipeService;
 
     @Autowired
-    RecipeRepository recipeRepository;
+    private RecipeRepository recipeRepository;
 
     @Autowired
-    RecipeCommandToRecipe recipeCommandToRecipe;
-
-    @Autowired
-    RecipeToRecipeCommand recipeToRecipeCommand;
+    private RecipeToRecipeCommand recipeToRecipeCommand;
 
 
     @Test
