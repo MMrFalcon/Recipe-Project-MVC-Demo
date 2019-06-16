@@ -10,7 +10,10 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -18,6 +21,11 @@ import static org.mockito.Mockito.*;
 
 public class RecipeServiceImplTest {
     private RecipeServiceImpl recipeService;
+    private static final Long RECIPE_ID = 1L;
+    private static final String RECIPE_DESCRIPTION = "Description";
+
+    private Recipe recipeFromRepository;
+    private RecipeCommand recipeCommand;
 
     @Mock
     RecipeRepository recipeRepository;
@@ -33,16 +41,20 @@ public class RecipeServiceImplTest {
         MockitoAnnotations.initMocks(this);
 
         recipeService = new RecipeServiceImpl(recipeRepository, recipeCommandToRecipe, recipeToRecipeCommand);
+
+        recipeFromRepository = new Recipe();
+        recipeFromRepository.setId(RECIPE_ID);
+        recipeFromRepository.setDescription(RECIPE_DESCRIPTION);
+
+        recipeCommand = new RecipeCommand();
+        recipeCommand.setId(RECIPE_ID);
+        recipeCommand.setDescription(RECIPE_DESCRIPTION);
     }
 
     @Test
     public void getRecipeCommandById() {
-        Recipe recipe = new Recipe();
-        recipe.setId(1L);
-        Optional<Recipe> recipeOptional = Optional.of(recipe);
+        Optional<Recipe> recipeOptional = Optional.of(recipeFromRepository);
 
-        RecipeCommand recipeCommand = new RecipeCommand();
-        recipeCommand.setId(1L);
 
         when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
         when(recipeToRecipeCommand.convert(any())).thenReturn(recipeCommand);
@@ -57,15 +69,11 @@ public class RecipeServiceImplTest {
     @Test
     public void getAllRecipes() {
 
-        RecipeCommand recipe = new RecipeCommand();
-        List<RecipeCommand> recipesData = new ArrayList<>();
-        recipesData.add(recipe);
-
         Set<Recipe> recipesFromRepository = new HashSet<>();
-        recipesFromRepository.add(new Recipe());
+        recipesFromRepository.add(recipeFromRepository);
 
         when(recipeRepository.findAll()).thenReturn(recipesFromRepository);
-        when(recipeToRecipeCommand.convert(any())).thenReturn(recipe);
+        when(recipeToRecipeCommand.convert(any())).thenReturn(recipeCommand);
 
         List<RecipeCommand> recipes = recipeService.getAllRecipes();
 
@@ -76,21 +84,15 @@ public class RecipeServiceImplTest {
 
     @Test
     public void saveRecipeCommand() {
-        RecipeCommand recipeCommand = new RecipeCommand();
-        recipeCommand.setId(1L);
-        recipeCommand.setDescription("Desc");
 
-        Recipe recipe = new Recipe();
-        recipe.setId(1L);
-
-        when(recipeRepository.save(any())).thenReturn(recipe);
-        when(recipeToRecipeCommand.convert(recipe)).thenReturn(recipeCommand);
+        when(recipeRepository.save(any())).thenReturn(recipeFromRepository);
+        when(recipeToRecipeCommand.convert(recipeFromRepository)).thenReturn(recipeCommand);
         RecipeCommand savedRecipe = recipeService.saveRecipeCommand(recipeCommand);
 
         assertEquals(savedRecipe.getId(), recipeCommand.getId());
         verify(recipeRepository, times(1)).save(any());
         verify(recipeCommandToRecipe, times(1)).convert(recipeCommand);
-        verify(recipeToRecipeCommand, times(1)).convert(recipe);
+        verify(recipeToRecipeCommand, times(1)).convert(recipeFromRepository);
     }
 
 }

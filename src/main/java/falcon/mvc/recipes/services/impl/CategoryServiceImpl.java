@@ -9,6 +9,8 @@ import falcon.mvc.recipes.services.CategoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Slf4j
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -28,9 +30,10 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryCommand getCategoryByDescription(String description) {
-        if (categoryRepository.findByDescription(description).isPresent()) {
+        Optional<Category> optionalCategory = categoryRepository.findByDescription(description);
+        if (optionalCategory.isPresent()) {
             log.debug("Searching for category...");
-            return categoryToCategoryCommand.convert(categoryRepository.findByDescription(description).get());
+            return categoryToCategoryCommand.convert(optionalCategory.get());
         }else {
             throw new RuntimeException("No such category");
         }
