@@ -46,14 +46,19 @@ public class RecipeServiceTestIT {
     public void getAllRecipes() {
         Recipe recipe = new Recipe();
         recipe.setId(1L);
+        recipe.setNotes(new Notes());
+
         Recipe secondRecipe = new Recipe();
         secondRecipe.setId(2L);
+        secondRecipe.setNotes(new Notes());
+
         Set<Recipe> recipesData = new HashSet<>();
         recipesData.add(recipe);
+        recipesData.add(secondRecipe);
 
         recipeRepository.saveAll(recipesData);
 
-        Set<Recipe> recipes = recipeService.getAllRecipes();
+        List<RecipeCommand> recipes = recipeService.getAllRecipes();
 
         assertEquals(recipes.size(), 2);
     }
@@ -77,34 +82,15 @@ public class RecipeServiceTestIT {
         assertEquals(testRecipe.getIngredients().size(), savedRecipeCommand.getIngredients().size());
     }
 
-    @Test
-    public void createRecipes() {
-        Set<Recipe> recipes = new HashSet<>();
-        Recipe firstRecipe = new Recipe();
-        firstRecipe.setId(1L);
-        firstRecipe.setNotes(new Notes());
-        recipes.add(firstRecipe);
-
-        Recipe secondRecipe = new Recipe();
-        secondRecipe.setId(2L);
-        secondRecipe.setDescription("Different than first");
-        secondRecipe.setNotes(new Notes());
-        recipes.add(secondRecipe);
-
-        List<RecipeCommand> createdRecipes = recipeService.createRecipes(recipes);
-
-        assertEquals(createdRecipes.size(),recipes.size());
-
-    }
 
     @Transactional
     @Test
-    public void getById() {
+    public void getRecipeCommandById() {
         RecipeCommand recipeCommand = new RecipeCommand();
         recipeCommand.setId(1L);
         recipeCommand.setNotes(new NotesCommand());
         recipeService.saveRecipeCommand(recipeCommand);
-        Recipe returnedRecipe = recipeService.getById(1L);
+        RecipeCommand returnedRecipe = recipeService.getRecipeCommandById(1L);
 
         assertNotNull(returnedRecipe);
         assertEquals(returnedRecipe.getId(), recipeCommand.getId());
@@ -115,7 +101,7 @@ public class RecipeServiceTestIT {
 
     @Transactional
     @Test
-    public void getByIdNotPresent() {
+    public void getRecipeCommandByIdNotPresent() {
         final String exceptionMessage = "Recipe not found";
         exceptionRule.expect(RuntimeException.class);
         exceptionRule.expectMessage(exceptionMessage);
@@ -124,7 +110,7 @@ public class RecipeServiceTestIT {
         recipeCommand.setId(1L);
         recipeCommand.setNotes(new NotesCommand());
         recipeService.saveRecipeCommand(recipeCommand);
-        recipeService.getById(13L);
+        recipeService.getRecipeCommandById(13L);
     }
 
 }
