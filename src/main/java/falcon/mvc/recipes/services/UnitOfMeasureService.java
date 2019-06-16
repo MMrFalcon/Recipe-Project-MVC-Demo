@@ -1,9 +1,9 @@
 package falcon.mvc.recipes.services;
 
-import falcon.mvc.recipes.domains.UnitOfMeasure;
+import falcon.mvc.recipes.commands.UnitOfMeasureCommand;
 
 public interface UnitOfMeasureService {
 
-    UnitOfMeasure getByUnit(String unit);
-    UnitOfMeasure createUnit(UnitOfMeasure unit);
+    UnitOfMeasureCommand getUnitOfMeasureByUnit(String unit);
+    UnitOfMeasureCommand createUnit(UnitOfMeasureCommand unit);
 }

@@ -1,8 +1,8 @@
 package falcon.mvc.recipes.services;
 
-import falcon.mvc.recipes.domains.Notes;
+import falcon.mvc.recipes.commands.NotesCommand;
 
 public interface NotesService {
 
-    Notes createNotes(Notes notes);
+    NotesCommand createNotes(NotesCommand notes);
 }

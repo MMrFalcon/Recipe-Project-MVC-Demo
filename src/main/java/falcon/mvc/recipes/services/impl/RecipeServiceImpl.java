@@ -10,7 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -29,24 +31,15 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Transactional
     @Override
-    public Set<Recipe> getAllRecipes() {
+    public List<RecipeCommand> getAllRecipes() {
         log.debug("Loading Set of Recipes");
-        Set<Recipe> recipes = new HashSet<>();
-        for (Recipe recipe : recipeRepository.findAll()) recipes.add(recipe);
+        List<RecipeCommand> recipes = new ArrayList<>();
+        for (Recipe recipe : recipeRepository.findAll()) {
+            recipes.add(recipeToRecipeCommand.convert(recipe));
+        }
         return recipes;
     }
 
-
-    @Override
-    public List<RecipeCommand> createRecipes(Set<Recipe> recipes) {
-        log.debug("Saving set of Recipes " + recipes);
-        List<RecipeCommand> savedRecipes = new ArrayList<>();
-        for (Recipe recipe : recipeRepository.saveAll(recipes)) {
-            savedRecipes.add(recipeToRecipeCommand.convert(recipe));
-        }
-        log.debug("Saved list size " + savedRecipes.size());
-        return savedRecipes;
-    }
 
     @Transactional
     @Override
@@ -58,13 +51,13 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public Recipe getById(Long id) {
-        Optional<Recipe> recipe = recipeRepository.findById(id);
-        log.debug("Searching for recipe with id: " + id);
+    public RecipeCommand getRecipeCommandById(Long recipeId) {
+        Optional<Recipe> recipe = recipeRepository.findById(recipeId);
+        log.debug("Searching for recipe with id: " + recipeId);
         if (!recipe.isPresent())
             throw new RuntimeException("Recipe not found");
         log.debug("Recipe was found: " + recipe.get());
-        return recipe.get();
+        return recipeToRecipeCommand.convert(recipe.get());
     }
 
 }

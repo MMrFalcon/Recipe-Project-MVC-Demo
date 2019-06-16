@@ -1,10 +1,10 @@
 package falcon.mvc.recipes.services;
 
-import falcon.mvc.recipes.domains.Category;
+import falcon.mvc.recipes.commands.CategoryCommand;
 
 public interface CategoryService {
 
-    Category getByDescription(String description);
-    Category createCategory(Category category);
+    CategoryCommand getCategoryByDescription(String description);
+    CategoryCommand createCategory(CategoryCommand category);
 
 }

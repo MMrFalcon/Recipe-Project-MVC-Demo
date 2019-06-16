@@ -1,8 +1,10 @@
 package falcon.mvc.recipes.bootstrap;
 
+import falcon.mvc.recipes.converters.CategoryCommandToCategory;
+import falcon.mvc.recipes.converters.RecipeToRecipeCommand;
+import falcon.mvc.recipes.converters.UnitOfMeasureCommandToUnitOfMeasure;
 import falcon.mvc.recipes.domains.*;
 import falcon.mvc.recipes.services.CategoryService;
-import falcon.mvc.recipes.services.IngredientService;
 import falcon.mvc.recipes.services.RecipeService;
 import falcon.mvc.recipes.services.UnitOfMeasureService;
 import lombok.extern.slf4j.Slf4j;
@@ -21,21 +23,31 @@ public class DataInitializer implements ApplicationListener<ContextRefreshedEven
 
     private RecipeService recipeService;
     private CategoryService categoryService;
-    private IngredientService ingredientService;
     private UnitOfMeasureService unitOfMeasureService;
+    private RecipeToRecipeCommand recipeToRecipeCommand;
+    private UnitOfMeasureCommandToUnitOfMeasure unitOfMeasureCommandToUnitOfMeasure;
+    private CategoryCommandToCategory categoryCommandToCategory;
 
-    public DataInitializer(RecipeService recipeService, CategoryService categoryService,IngredientService ingredientService, UnitOfMeasureService unitOfMeasureService) {
+    public DataInitializer(RecipeService recipeService, CategoryService categoryService,
+                           UnitOfMeasureService unitOfMeasureService, RecipeToRecipeCommand recipeToRecipeCommand,
+                           UnitOfMeasureCommandToUnitOfMeasure unitOfMeasureCommandToUnitOfMeasure,
+                           CategoryCommandToCategory categoryCommandToCategory) {
+
         this.recipeService = recipeService;
         this.categoryService = categoryService;
-        this.ingredientService = ingredientService;
         this.unitOfMeasureService = unitOfMeasureService;
+        this.recipeToRecipeCommand = recipeToRecipeCommand;
+        this.unitOfMeasureCommandToUnitOfMeasure = unitOfMeasureCommandToUnitOfMeasure;
+        this.categoryCommandToCategory = categoryCommandToCategory;
     }
 
     @Override
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
         log.debug("Loading data on starts up");
-        recipeService.createRecipes(recipesInitialization());
+        for (Recipe recipe: recipesInitialization()) {
+            recipeService.saveRecipeCommand(recipeToRecipeCommand.convert(recipe));
+        }
     }
     private Set<Recipe> recipesInitialization() {
 
@@ -44,10 +56,10 @@ public class DataInitializer implements ApplicationListener<ContextRefreshedEven
         Byte[] mockImg = new Byte[1];
         mockImg[0] = 1;
 
-        UnitOfMeasure each = unitOfMeasureService.getByUnit("each");
-        UnitOfMeasure pinch= unitOfMeasureService.getByUnit("pinch");
-        UnitOfMeasure tablespoon = unitOfMeasureService.getByUnit("tablespoon");
-        UnitOfMeasure teaspoon = unitOfMeasureService.getByUnit("teaspoon");
+        UnitOfMeasure each = unitOfMeasureCommandToUnitOfMeasure.convert(unitOfMeasureService.getUnitOfMeasureByUnit("each"));
+        UnitOfMeasure pinch= unitOfMeasureCommandToUnitOfMeasure.convert(unitOfMeasureService.getUnitOfMeasureByUnit("pinch"));
+        UnitOfMeasure tablespoon = unitOfMeasureCommandToUnitOfMeasure.convert(unitOfMeasureService.getUnitOfMeasureByUnit("tablespoon"));
+        UnitOfMeasure teaspoon = unitOfMeasureCommandToUnitOfMeasure.convert(unitOfMeasureService.getUnitOfMeasureByUnit("teaspoon"));
         log.debug(String.valueOf(unitOfMeasureService));
         log.debug(each.getUnit() + "," + pinch.toString());
         //Guacamole
@@ -67,8 +79,8 @@ public class DataInitializer implements ApplicationListener<ContextRefreshedEven
         recipe.setNotes(guacamoleNotes);
 
         Set<Category> categories = new HashSet<>();
-        categories.add(categoryService.getByDescription("Vegan"));
-        categories.add(categoryService.getByDescription("Mexican"));
+        categories.add(categoryCommandToCategory.convert(categoryService.getCategoryByDescription("Vegan")));
+        categories.add(categoryCommandToCategory.convert(categoryService.getCategoryByDescription("Mexican")));
 
         recipe.setCategories(categories);
 
@@ -100,7 +112,7 @@ public class DataInitializer implements ApplicationListener<ContextRefreshedEven
         tacoNotes.setRecipe(recipe2);
         recipe2.setNotes(tacoNotes);
 
-       recipe2.getCategories().add(categoryService.getByDescription("Mexican"));
+       recipe2.getCategories().add(categoryCommandToCategory.convert(categoryService.getCategoryByDescription("Mexican")));
 
        recipe2.addIngredient(new Ingredient("Avocado", new BigDecimal(4), each));
        recipe2.addIngredient(new Ingredient("Salt", new BigDecimal(2), pinch));

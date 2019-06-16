@@ -1,5 +1,8 @@
 package falcon.mvc.recipes.services.impl;
 
+import falcon.mvc.recipes.commands.CategoryCommand;
+import falcon.mvc.recipes.converters.CategoryCommandToCategory;
+import falcon.mvc.recipes.converters.CategoryToCategoryCommand;
 import falcon.mvc.recipes.domains.Category;
 import falcon.mvc.recipes.repositories.CategoryRepository;
 import falcon.mvc.recipes.services.CategoryService;
@@ -11,25 +14,32 @@ import org.springframework.stereotype.Service;
 public class CategoryServiceImpl implements CategoryService {
 
    private final CategoryRepository categoryRepository;
+   private final CategoryToCategoryCommand categoryToCategoryCommand;
+   private final CategoryCommandToCategory categoryCommandToCategory;
 
-    public CategoryServiceImpl(CategoryRepository categoryRepository) {
+    public CategoryServiceImpl(CategoryRepository categoryRepository, CategoryToCategoryCommand categoryToCategoryCommand,
+                               CategoryCommandToCategory categoryCommandToCategory) {
+
+        this.categoryToCategoryCommand = categoryToCategoryCommand;
         this.categoryRepository = categoryRepository;
+        this.categoryCommandToCategory = categoryCommandToCategory;
     }
 
 
     @Override
-    public Category getByDescription(String description) {
+    public CategoryCommand getCategoryByDescription(String description) {
         if (categoryRepository.findByDescription(description).isPresent()) {
             log.debug("Searching for category...");
-            return categoryRepository.findByDescription(description).get();
+            return categoryToCategoryCommand.convert(categoryRepository.findByDescription(description).get());
         }else {
             throw new RuntimeException("No such category");
         }
     }
 
     @Override
-    public Category createCategory(Category category) {
+    public CategoryCommand createCategory(CategoryCommand category) {
         log.debug("Saving category " + category);
-        return categoryRepository.save(category);
+        Category savedCategory = categoryRepository.save(categoryCommandToCategory.convert(category));
+        return categoryToCategoryCommand.convert(savedCategory);
     }
 }

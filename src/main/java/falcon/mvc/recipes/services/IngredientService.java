@@ -1,7 +1,7 @@
 package falcon.mvc.recipes.services;
 
-import falcon.mvc.recipes.domains.Ingredient;
+import falcon.mvc.recipes.commands.IngredientCommand;
 
 public interface IngredientService {
-    Ingredient getByName(String name);
+    IngredientCommand getIngredientByName(String name);
 }

@@ -1,6 +1,7 @@
 package falcon.mvc.recipes.services.impl;
 
-import falcon.mvc.recipes.domains.Ingredient;
+import falcon.mvc.recipes.commands.IngredientCommand;
+import falcon.mvc.recipes.converters.IngredientToIngredientCommand;
 import falcon.mvc.recipes.repositories.IngredientRepository;
 import falcon.mvc.recipes.services.IngredientService;
 import lombok.extern.slf4j.Slf4j;
@@ -11,16 +12,20 @@ import org.springframework.stereotype.Service;
 public class IngredientServiceImpl implements IngredientService {
 
     private final IngredientRepository ingredientRepository;
+    private final IngredientToIngredientCommand ingredientToIngredientCommand;
 
-    public IngredientServiceImpl(IngredientRepository ingredientRepository) {
+    public IngredientServiceImpl(IngredientRepository ingredientRepository,
+                                 IngredientToIngredientCommand ingredientToIngredientCommand) {
+
         this.ingredientRepository = ingredientRepository;
+        this.ingredientToIngredientCommand = ingredientToIngredientCommand;
     }
 
     @Override
-    public Ingredient getByName(String name) {
+    public IngredientCommand getIngredientByName(String name) {
         if (ingredientRepository.findByName(name).isPresent()) {
             log.debug("Searching for Ingredient with name " + name);
-            return ingredientRepository.findByName(name).get();
+            return ingredientToIngredientCommand.convert(ingredientRepository.findByName(name).get());
         }else {
             throw new RuntimeException("No such Ingredient!");
         }
