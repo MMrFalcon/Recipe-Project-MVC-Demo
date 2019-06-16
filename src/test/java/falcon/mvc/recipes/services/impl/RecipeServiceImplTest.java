@@ -10,10 +10,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -39,16 +36,20 @@ public class RecipeServiceImplTest {
     }
 
     @Test
-    public void getRecipeById() {
+    public void getRecipeCommandById() {
         Recipe recipe = new Recipe();
         recipe.setId(1L);
         Optional<Recipe> recipeOptional = Optional.of(recipe);
 
+        RecipeCommand recipeCommand = new RecipeCommand();
+        recipeCommand.setId(1L);
+
         when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+        when(recipeToRecipeCommand.convert(any())).thenReturn(recipeCommand);
 
-        Recipe recipeReturned = recipeService.getById(1L);
+        RecipeCommand recipeReturned = recipeService.getRecipeCommandById(1L);
 
-        assertNotNull("Null recipe returned", recipeReturned);
+        assertNotNull(recipeReturned);
         verify(recipeRepository, times(1)).findById(anyLong());
         verify(recipeRepository, never()).findAll();
     }
@@ -56,34 +57,21 @@ public class RecipeServiceImplTest {
     @Test
     public void getAllRecipes() {
 
-        Recipe recipe = new Recipe();
-        Set<Recipe> recipesData = new HashSet<>();
+        RecipeCommand recipe = new RecipeCommand();
+        List<RecipeCommand> recipesData = new ArrayList<>();
         recipesData.add(recipe);
 
-        when(recipeService.getAllRecipes()).thenReturn(recipesData);
+        Set<Recipe> recipesFromRepository = new HashSet<>();
+        recipesFromRepository.add(new Recipe());
 
-        Set<Recipe> recipes = recipeService.getAllRecipes();
+        when(recipeRepository.findAll()).thenReturn(recipesFromRepository);
+        when(recipeToRecipeCommand.convert(any())).thenReturn(recipe);
+
+        List<RecipeCommand> recipes = recipeService.getAllRecipes();
 
         assertEquals(recipes.size(), 1);
         verify(recipeRepository, times(1)).findAll();
         verify(recipeRepository, never()).findById(anyLong());
-    }
-
-    @Test
-    public void createRecipes() {
-        Recipe recipe = new Recipe();
-        recipe.setId(1L);
-        Recipe secondRecipe = new Recipe();
-        secondRecipe.setId(2L);
-        Set<Recipe> recipesData = new HashSet<>();
-        recipesData.add(recipe);
-        recipesData.add(secondRecipe);
-
-        when(recipeRepository.saveAll(recipesData)).thenReturn(recipesData);
-        List<RecipeCommand> savedRecipes = recipeService.createRecipes(recipesData);
-
-        assertNotNull(savedRecipes);
-        assertEquals(recipesData.size(), savedRecipes.size());
     }
 
     @Test

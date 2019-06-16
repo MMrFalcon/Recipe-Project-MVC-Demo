@@ -1,6 +1,6 @@
 package falcon.mvc.recipes.controllers;
 
-import falcon.mvc.recipes.domains.Recipe;
+import falcon.mvc.recipes.commands.RecipeCommand;
 import falcon.mvc.recipes.services.RecipeService;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,11 +17,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class RecipeControllerTest {
 
     @Mock
-    RecipeService recipeService;
+    private RecipeService recipeService;
 
-    RecipeController recipeController;
+    private RecipeController recipeController;
 
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @Before
     public void setUp() throws Exception {
@@ -32,12 +32,12 @@ public class RecipeControllerTest {
 
     @Test
     public void showRecipe() throws Exception{
-        Recipe recipe = new Recipe();
+        RecipeCommand recipe = new RecipeCommand();
         recipe.setId(1L);
 
-        when(recipeService.getById(anyLong())).thenReturn(recipe);
+        when(recipeService.getRecipeCommandById(anyLong())).thenReturn(recipe);
 
-        mockMvc.perform(get("/recipe/show/1"))
+        mockMvc.perform(get("/recipe/1/show"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("recipe/show"))
                 .andExpect(model().attributeExists("recipe"));
