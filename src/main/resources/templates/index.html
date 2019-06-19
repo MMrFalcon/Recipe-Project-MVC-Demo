@@ -13,6 +13,7 @@
 </head>
 
 <body>
+<nav th:replace="fragments/header :: header"></nav>
 <div class="jumbotron">
 <div class="container">
     <div class="row justify-content-center">
@@ -29,12 +30,14 @@
                             <th>Description</th>
                             <th>Preparing Time</th>
                             <th>View</th>
+                            <th>Edit</th>
                         </tr>
                         </thead>
                         <tr th:each="recipe: ${recipes}">
                             <td th:text="${recipe.description}">desc</td>
                             <td th:text="${recipe.prepTime}">prepTime</td>
-                            <td><a href="#" th:href="@{'/recipe/show/' + ${recipe.id}}">View</a></td>
+                            <td><a href="#" th:href="@{'/recipe/' + ${recipe.id} +'/show'}">View</a></td>
+                            <td><a href="#" th:href="@{'/recipe/'  + ${recipe.id} + '/update'}">Edit</a> </td>
                         </tr>
 
                     </table>

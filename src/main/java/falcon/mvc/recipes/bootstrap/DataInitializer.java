@@ -54,9 +54,6 @@ public class DataInitializer implements ApplicationListener<ContextRefreshedEven
 
         Set<Recipe> recipes = new HashSet<>();
 
-        Byte[] mockImg = new Byte[1];
-        mockImg[0] = 1;
-
         UnitOfMeasure each = unitOfMeasureCommandToUnitOfMeasure.convert(unitOfMeasureService.getUnitOfMeasureByUnit("each"));
         UnitOfMeasure pinch= unitOfMeasureCommandToUnitOfMeasure.convert(unitOfMeasureService.getUnitOfMeasureByUnit("pinch"));
         UnitOfMeasure tablespoon = unitOfMeasureCommandToUnitOfMeasure.convert(unitOfMeasureService.getUnitOfMeasureByUnit("tablespoon"));
@@ -69,10 +66,8 @@ public class DataInitializer implements ApplicationListener<ContextRefreshedEven
         recipe.setCookTime(0);
         recipe.setDescription("Guacamole");
         recipe.setDifficulty(Difficulty.EASY);
-        recipe.setImg(mockImg);
         recipe.setServings(30);
         recipe.setDirections("Get guacamole - smash guacamole - eat");
-        recipe.setImg(mockImg);
 
         Notes guacamoleNotes = new Notes();
         guacamoleNotes.setRecipeNotes("can informally be referred tae \nas \"guac\" in North Americae)" +
@@ -101,10 +96,9 @@ public class DataInitializer implements ApplicationListener<ContextRefreshedEven
         recipe2.setCookTime(0);
         recipe2.setDescription("Tacos");
         recipe2.setDifficulty(Difficulty.MODERATE);
-        recipe2.setImg(mockImg);
         recipe2.setServings(60);
         recipe2.setDirections("Just do it!");
-        recipe2.setImg(mockImg);
+
 
         Notes tacoNotes = new Notes();
         tacoNotes.setRecipeNotes("Is a traditional Mexican dish consisting\nof a corn or wheat tortilla " +
