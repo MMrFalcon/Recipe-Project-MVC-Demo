@@ -31,7 +31,12 @@ public class Recipe {
     @Enumerated(value = EnumType.STRING)
     private Difficulty difficulty;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe")
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name="recipe_ingredients",
+            joinColumns = @JoinColumn( name="recipe_id"),
+            inverseJoinColumns = @JoinColumn( name="ingredient_id")
+    )
     private Set<Ingredient> ingredients = new HashSet<>();
 
     @ManyToMany
@@ -39,14 +44,4 @@ public class Recipe {
     joinColumns = @JoinColumn(name = "recipe_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Set<Category> categories = new HashSet<>();
 
-    public void setNotes(Notes notes) {
-        this.notes = notes;
-        notes.setRecipe(this);
-    }
-
-    public Recipe addIngredient(Ingredient ingredient) {
-        ingredient.setRecipe(this);
-        this.ingredients.add(ingredient);
-        return this;
-    }
 }

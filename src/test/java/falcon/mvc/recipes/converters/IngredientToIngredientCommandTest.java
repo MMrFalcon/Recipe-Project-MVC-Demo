@@ -2,7 +2,6 @@ package falcon.mvc.recipes.converters;
 
 import falcon.mvc.recipes.commands.IngredientCommand;
 import falcon.mvc.recipes.domains.Ingredient;
-import falcon.mvc.recipes.domains.Recipe;
 import falcon.mvc.recipes.domains.UnitOfMeasure;
 import org.junit.Before;
 import org.junit.Rule;
@@ -16,7 +15,6 @@ import static org.junit.Assert.assertNotNull;
 
 public class IngredientToIngredientCommandTest {
 
-    private static final Recipe RECIPE = new Recipe();
     private static final BigDecimal AMOUNT = new BigDecimal("1");
     private static final String DESCRIPTION = "Cheeseburger";
     private static final Long UOM_ID = 2L;
@@ -56,7 +54,6 @@ public class IngredientToIngredientCommandTest {
 
         Ingredient ingredient = new Ingredient();
         ingredient.setId(ID_VALUE);
-        ingredient.setRecipe(RECIPE);
         ingredient.setAmount(AMOUNT);
         ingredient.setName(DESCRIPTION);
         ingredient.setUnitOfMeasure(null);
@@ -70,7 +67,6 @@ public class IngredientToIngredientCommandTest {
 
         Ingredient ingredient = new Ingredient();
         ingredient.setId(ID_VALUE);
-        ingredient.setRecipe(RECIPE);
         ingredient.setAmount(AMOUNT);
         ingredient.setName(DESCRIPTION);
 

@@ -48,6 +48,7 @@ public class DataInitializer implements ApplicationListener<ContextRefreshedEven
         for (Recipe recipe: recipesInitialization()) {
             recipeService.saveRecipeCommand(recipeToRecipeCommand.convert(recipe));
         }
+
     }
     private Set<Recipe> recipesInitialization() {
 
@@ -61,7 +62,7 @@ public class DataInitializer implements ApplicationListener<ContextRefreshedEven
         UnitOfMeasure tablespoon = unitOfMeasureCommandToUnitOfMeasure.convert(unitOfMeasureService.getUnitOfMeasureByUnit("tablespoon"));
         UnitOfMeasure teaspoon = unitOfMeasureCommandToUnitOfMeasure.convert(unitOfMeasureService.getUnitOfMeasureByUnit("teaspoon"));
         log.debug(String.valueOf(unitOfMeasureService));
-        log.debug(each.getUnit() + "," + pinch.toString());
+
         //Guacamole
         Recipe recipe = new Recipe();
         recipe.setPrepTime(30);
@@ -70,7 +71,8 @@ public class DataInitializer implements ApplicationListener<ContextRefreshedEven
         recipe.setDifficulty(Difficulty.EASY);
         recipe.setImg(mockImg);
         recipe.setServings(30);
-
+        recipe.setDirections("Get guacamole - smash guacamole - eat");
+        recipe.setImg(mockImg);
 
         Notes guacamoleNotes = new Notes();
         guacamoleNotes.setRecipeNotes("can informally be referred tae \nas \"guac\" in North Americae)" +
@@ -84,10 +86,10 @@ public class DataInitializer implements ApplicationListener<ContextRefreshedEven
 
         recipe.setCategories(categories);
 
-        recipe.addIngredient(new Ingredient("Avocado", new BigDecimal(2), each));
-        recipe.addIngredient(new Ingredient("Salt", new BigDecimal(1), pinch));
-        recipe.addIngredient(new Ingredient("Chili pepper", new BigDecimal(3), each));
-        recipe.addIngredient(new Ingredient("Oil", new BigDecimal(1), tablespoon));
+        recipe.getIngredients().add(new Ingredient("Avocado", new BigDecimal(2), each));
+        recipe.getIngredients().add(new Ingredient("Salt", new BigDecimal(1), pinch));
+        recipe.getIngredients().add(new Ingredient("Chili pepper", new BigDecimal(3), each));
+        recipe.getIngredients().add(new Ingredient("Oil", new BigDecimal(1), tablespoon));
 
 
         recipes.add(recipe);
@@ -101,6 +103,8 @@ public class DataInitializer implements ApplicationListener<ContextRefreshedEven
         recipe2.setDifficulty(Difficulty.MODERATE);
         recipe2.setImg(mockImg);
         recipe2.setServings(60);
+        recipe2.setDirections("Just do it!");
+        recipe2.setImg(mockImg);
 
         Notes tacoNotes = new Notes();
         tacoNotes.setRecipeNotes("Is a traditional Mexican dish consisting\nof a corn or wheat tortilla " +
@@ -114,15 +118,17 @@ public class DataInitializer implements ApplicationListener<ContextRefreshedEven
 
        recipe2.getCategories().add(categoryCommandToCategory.convert(categoryService.getCategoryByDescription("Mexican")));
 
-       recipe2.addIngredient(new Ingredient("Avocado", new BigDecimal(4), each));
-       recipe2.addIngredient(new Ingredient("Salt", new BigDecimal(2), pinch));
-       recipe2.addIngredient(new Ingredient("Chili pepper", new BigDecimal(3), each));
-       recipe2.addIngredient(new Ingredient("Oil", new BigDecimal(1), tablespoon));
-       recipe2.addIngredient(new Ingredient("Flour", new BigDecimal(5), teaspoon));
+       recipe2.getIngredients().add(new Ingredient("Avocado", new BigDecimal(4), each));
+       recipe2.getIngredients().add(new Ingredient("Salt", new BigDecimal(2), pinch));
+       recipe2.getIngredients().add(new Ingredient("Chili pepper", new BigDecimal(3), each));
+       recipe2.getIngredients().add(new Ingredient("Oil", new BigDecimal(1), tablespoon));
+       recipe2.getIngredients().add(new Ingredient("Flour", new BigDecimal(5), teaspoon));
 
        recipes.add(recipe2);
 
         return recipes;
     }
+
+
 
 }
