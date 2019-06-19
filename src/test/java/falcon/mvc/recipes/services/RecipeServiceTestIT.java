@@ -6,6 +6,7 @@ import falcon.mvc.recipes.converters.RecipeToRecipeCommand;
 import falcon.mvc.recipes.domains.Notes;
 import falcon.mvc.recipes.domains.Recipe;
 import falcon.mvc.recipes.repositories.RecipeRepository;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -19,14 +20,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class RecipeServiceTestIT {
 
     private static final String NEW_DESCRIPTION = "New Description";
+    private static final Long RECIPE_ID = 1L;
+    private static final Long RECIPE_FOR_DELETE_ID = 2L;
+
+    private RecipeCommand recipeCommand;
 
     @Autowired
     private RecipeService recipeService;
@@ -37,11 +41,17 @@ public class RecipeServiceTestIT {
     @Autowired
     private RecipeToRecipeCommand recipeToRecipeCommand;
 
+    @Before
+    public void setUp() throws Exception {
+        recipeCommand = new RecipeCommand();
+        recipeCommand.setId(RECIPE_ID);
+        recipeCommand.setNotes(new NotesCommand());
+    }
 
     @Test
     public void getAllRecipes() {
         Recipe recipe = new Recipe();
-        recipe.setId(1L);
+        recipe.setId(RECIPE_ID);
         recipe.setNotes(new Notes());
 
         Recipe secondRecipe = new Recipe();
@@ -82,11 +92,9 @@ public class RecipeServiceTestIT {
     @Transactional
     @Test
     public void getRecipeCommandById() {
-        RecipeCommand recipeCommand = new RecipeCommand();
-        recipeCommand.setId(1L);
-        recipeCommand.setNotes(new NotesCommand());
+
         recipeService.saveRecipeCommand(recipeCommand);
-        RecipeCommand returnedRecipe = recipeService.getRecipeCommandById(1L);
+        RecipeCommand returnedRecipe = recipeService.getRecipeCommandById(RECIPE_ID);
 
         assertNotNull(returnedRecipe);
         assertEquals(returnedRecipe.getId(), recipeCommand.getId());
@@ -102,11 +110,19 @@ public class RecipeServiceTestIT {
         exceptionRule.expect(RuntimeException.class);
         exceptionRule.expectMessage(exceptionMessage);
 
-        RecipeCommand recipeCommand = new RecipeCommand();
-        recipeCommand.setId(1L);
-        recipeCommand.setNotes(new NotesCommand());
         recipeService.saveRecipeCommand(recipeCommand);
         recipeService.getRecipeCommandById(13L);
     }
 
+    @Test
+    public void deleteRecipeById() {
+        RecipeCommand recipeForDelete = new RecipeCommand();
+        recipeForDelete.setNotes(new NotesCommand());
+        recipeForDelete.setId(RECIPE_FOR_DELETE_ID);
+
+        recipeService.saveRecipeCommand(recipeForDelete);
+        recipeService.deleteById(RECIPE_FOR_DELETE_ID);
+
+        assertFalse(recipeRepository.findById(RECIPE_FOR_DELETE_ID).isPresent());
+    }
 }

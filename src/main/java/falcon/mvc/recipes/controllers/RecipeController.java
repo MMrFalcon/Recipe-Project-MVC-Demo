@@ -4,10 +4,7 @@ import falcon.mvc.recipes.commands.RecipeCommand;
 import falcon.mvc.recipes.services.RecipeService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/recipe")
@@ -19,12 +16,14 @@ public class RecipeController {
         this.recipeService = recipeService;
     }
 
+    @GetMapping
     @RequestMapping("/{id}/show")
     public String showRecipe(@PathVariable String id, Model model) {
         model.addAttribute("recipe", recipeService.getRecipeCommandById(Long.valueOf(id)));
         return "recipe/show";
     }
 
+    @GetMapping
     @RequestMapping("/new")
     public String getNewRecipeForm(Model model) {
         model.addAttribute("recipe", new RecipeCommand());
@@ -32,6 +31,7 @@ public class RecipeController {
         return "recipe/recipeForm";
     }
 
+    @GetMapping
     @RequestMapping("/{id}/update")
     public String updateRecipe(@PathVariable String id, Model model){
         model.addAttribute("recipe", recipeService.getRecipeCommandById(Long.valueOf(id)));
@@ -43,5 +43,12 @@ public class RecipeController {
         RecipeCommand savedRecipe  =  recipeService.saveRecipeCommand(recipeCommand);
 
         return "redirect:/recipe/" + savedRecipe.getId() + "/show/";
+    }
+
+    @GetMapping
+    @RequestMapping("/{id}/delete")
+    public String deleteRecipe(@PathVariable String id) {
+        recipeService.deleteById(Long.valueOf(id));
+        return "redirect:/index";
     }
 }

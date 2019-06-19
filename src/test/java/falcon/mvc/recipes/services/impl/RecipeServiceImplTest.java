@@ -95,4 +95,10 @@ public class RecipeServiceImplTest {
         verify(recipeToRecipeCommand, times(1)).convert(recipeFromRepository);
     }
 
+    @Test
+    public void deleteRecipeById() {
+        recipeService.deleteById(RECIPE_ID);
+
+        verify(recipeRepository, times(1)).deleteById(anyLong());
+    }
 }
