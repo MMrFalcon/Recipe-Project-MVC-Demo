@@ -21,7 +21,6 @@ public class Recipe {
     private String description;
     private String directions;
 
-
     @Lob
     private Byte[] img;
 
@@ -31,12 +30,7 @@ public class Recipe {
     @Enumerated(value = EnumType.STRING)
     private Difficulty difficulty;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name="recipe_ingredients",
-            joinColumns = @JoinColumn( name="recipe_id"),
-            inverseJoinColumns = @JoinColumn( name="ingredient_id")
-    )
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe")
     private Set<Ingredient> ingredients = new HashSet<>();
 
     @ManyToMany
@@ -44,4 +38,9 @@ public class Recipe {
     joinColumns = @JoinColumn(name = "recipe_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Set<Category> categories = new HashSet<>();
 
+    public Recipe addIngredient(Ingredient ingredient){
+        ingredient.setRecipe(this);
+        this.ingredients.add(ingredient);
+        return this;
+    }
 }
