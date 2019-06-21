@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css} "/>
+    <script th:href="@{/webjars/jquery/3.4.0/jquery.min.js} "></script>
+    <title>Ingredient</title>
+</head>
+<body>
+<div class="jumbotron">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h1 class="panel-title text-center">Ingredient</h1>
+                    </div>
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="table table-dark">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tr>
+                                    <td th:text="${ingredient.id}">334</td>
+                                    <td th:text="${ingredient.amount} + ' ' + ${ingredient.unitOfMeasure.getUnit()}
+                                    + ' ' + ${ingredient.name}"></td>
+                                </tr>
+
+                            </table>
+            </div>
+        </div>
+</body>
+</html>

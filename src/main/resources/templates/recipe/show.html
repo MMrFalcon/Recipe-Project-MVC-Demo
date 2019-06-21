@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css} "/>
     <script th:href="@{/webjars/jquery/3.4.0/jquery.min.js} "></script>
-    <title>Recipe List</title>
+    <title>Recipe</title>
 </head>
 <body>
 <nav th:replace="fragments/header :: header"></nav>
@@ -37,11 +37,17 @@
                         ',&nbsp;Servings:&nbsp;' + ${recipe.servings}"></h4>
                     </div>
                     <div class="card-body">
-                        <ul th:each="ingredient:${recipe.ingredients}">
-                            <li><h3 th:text="${ingredient.name}+'&nbsp;'+
+                        <div class="d-flex">
+                            <div class="p-2 mr-auto">
+                                <ul th:each="ingredient:${recipe.ingredients}">
+                                    <li><h3 th:text="${ingredient.name}+'&nbsp;'+
                                 ${ingredient.amount}+'&nbsp;'+${ingredient.unitOfMeasure.unit}">ingredient</h3></li>
-                        </ul>
-
+                                </ul>
+                            </div>
+                            <div class="p-2">
+                                <a href="#" th:href="@{'/recipe/' + ${recipe.id} + '/ingredients'}">View</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -80,8 +86,8 @@
     </div>
 
     <div class="row justify-content-center mt-3">
-     <a class="btn btn-outline-secondary" th:text="'Home Page'"
-        th:href="@{'/index'}">Secondary</a>
+        <a class="btn btn-outline-secondary" th:text="'Home Page'"
+           th:href="@{'/index'}">Secondary</a>
     </div>
 </div>
 </body>

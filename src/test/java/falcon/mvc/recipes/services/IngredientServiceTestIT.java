@@ -2,8 +2,11 @@ package falcon.mvc.recipes.services;
 
 import falcon.mvc.recipes.commands.IngredientCommand;
 import falcon.mvc.recipes.domains.Ingredient;
+import falcon.mvc.recipes.domains.Notes;
+import falcon.mvc.recipes.domains.Recipe;
 import falcon.mvc.recipes.domains.UnitOfMeasure;
 import falcon.mvc.recipes.repositories.IngredientRepository;
+import falcon.mvc.recipes.repositories.RecipeRepository;
 import falcon.mvc.recipes.repositories.UnitOfMeasureRepository;
 import org.junit.Before;
 import org.junit.Rule;
@@ -14,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.math.BigDecimal;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -22,8 +27,16 @@ import static org.junit.Assert.assertNotNull;
 public class IngredientServiceTestIT {
 
     private static final String INGREDIENT_NAME = "pepper";
+    private static final String SECOND_INGREDIENT_NAME = "salt";
+    private static final Long NON_EXISTING_INGREDIENT_ID = 123456L;
 
     private Ingredient ingredient;
+
+    private Ingredient ingredientForRecipe;
+
+    private Recipe recipe;
+
+    private Recipe savedRecipe;
 
     @Autowired
     private IngredientService ingredientService;
@@ -33,6 +46,9 @@ public class IngredientServiceTestIT {
 
     @Autowired
     private UnitOfMeasureRepository unitOfMeasureRepository;
+
+    @Autowired
+    private RecipeRepository recipeRepository;
 
     @Before
     public void setUp() throws Exception {
@@ -47,6 +63,13 @@ public class IngredientServiceTestIT {
         ingredient.setUnitOfMeasure(savedUnitOfMeasure);
 
         ingredientRepository.save(ingredient);
+
+        ingredientForRecipe = new Ingredient(SECOND_INGREDIENT_NAME, new BigDecimal(2), savedUnitOfMeasure);
+
+        recipe = new Recipe();
+        recipe.addIngredient(ingredientForRecipe);
+        recipe.setNotes(new Notes());
+        savedRecipe = recipeRepository.save(recipe);
     }
 
     @Test
@@ -66,5 +89,22 @@ public class IngredientServiceTestIT {
         exceptionRule.expect(RuntimeException.class);
         exceptionRule.expectMessage(exceptionMessage);
         ingredientService.getIngredientByName("Does not exist");
+    }
+
+    @Test
+    public void getIngredientByRecipeIdAndIngredientId() {
+        IngredientCommand foundIngredient =
+                ingredientService.getIngredientByRecipeIdAndIngredientId(savedRecipe.getId(), ingredientForRecipe.getId());
+
+        assertNotNull(foundIngredient);
+        assertEquals(SECOND_INGREDIENT_NAME, foundIngredient.getName());
+    }
+
+    @Test
+    public void getIngredientByRecipeIdAndIngredientIdNotPresent() {
+        final String exceptionMessage = "Ingredient not found";
+        exceptionRule.expect(RuntimeException.class);
+        exceptionRule.expectMessage(exceptionMessage);
+        ingredientService.getIngredientByRecipeIdAndIngredientId(savedRecipe.getId(), NON_EXISTING_INGREDIENT_ID);
     }
 }
