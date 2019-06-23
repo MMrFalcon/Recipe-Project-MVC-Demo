@@ -69,6 +69,12 @@ public class IngredientServiceImpl implements IngredientService {
         return validSavedIngredientCommandInRecipe(ingredientCommand, savedRecipe);
     }
 
+    @Override
+    public void deleteIngredientById(Long ingredientId) {
+        log.debug("Removing ingredient with ID " + ingredientId);
+        ingredientRepository.deleteById(ingredientId);
+    }
+
     private void updateIngredient(IngredientCommand existingIngredient, IngredientCommand updatedIngredientCommand) {
         existingIngredient.setName(updatedIngredientCommand.getName());
         existingIngredient.setAmount(updatedIngredientCommand.getAmount());

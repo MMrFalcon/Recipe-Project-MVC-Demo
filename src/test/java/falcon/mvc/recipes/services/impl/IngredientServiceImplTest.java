@@ -132,4 +132,11 @@ public class IngredientServiceImplTest {
         verify(recipeService, times(1)).saveRecipeCommand(recipeCommand);
         verify(recipeService, times(1)).getRecipeCommandById(RECIPE_ID);
     }
+
+    @Test
+    public void deleteIngredientById() {
+
+        ingredientService.deleteIngredientById(INGREDIENT_ID);
+        verify(ingredientRepository, times(1)).deleteById(INGREDIENT_ID);
+    }
 }

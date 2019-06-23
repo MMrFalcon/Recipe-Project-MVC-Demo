@@ -6,6 +6,7 @@ import falcon.mvc.recipes.domains.Ingredient;
 import falcon.mvc.recipes.domains.Notes;
 import falcon.mvc.recipes.domains.Recipe;
 import falcon.mvc.recipes.domains.UnitOfMeasure;
+import falcon.mvc.recipes.repositories.IngredientRepository;
 import falcon.mvc.recipes.repositories.RecipeRepository;
 import falcon.mvc.recipes.repositories.UnitOfMeasureRepository;
 import org.junit.Before;
@@ -19,8 +20,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -49,6 +49,9 @@ public class IngredientServiceTestIT {
 
     @Autowired
     private RecipeRepository recipeRepository;
+
+    @Autowired
+    private IngredientRepository ingredientRepository;
 
     @Before
     public void setUp() throws Exception {
@@ -117,5 +120,17 @@ public class IngredientServiceTestIT {
         assertNotNull(savedIngredient);
         assertEquals(SECOND_INGREDIENT_NAME, savedIngredient.getName());
         assertEquals(savedRecipe.getId(), savedIngredient.getRecipeId());
+    }
+
+    @Test
+    public void deleteIngredientById() {
+        Ingredient ingredientForDelete = new Ingredient();
+        ingredientForDelete.setUnitOfMeasure(unitOfMeasureRepository.findById(IMPORTED_UOM_ID).get());
+        ingredientForDelete.setName(SECOND_INGREDIENT_NAME);
+
+        Ingredient savedIngredient = ingredientRepository.save(ingredientForDelete);
+        ingredientService.deleteIngredientById(savedIngredient.getId());
+
+        assertFalse(ingredientRepository.findById(savedIngredient.getId()).isPresent());
     }
 }
