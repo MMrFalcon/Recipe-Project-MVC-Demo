@@ -1,6 +1,7 @@
 package falcon.mvc.recipes.services;
 
 import falcon.mvc.recipes.commands.IngredientCommand;
+import falcon.mvc.recipes.commands.UnitOfMeasureCommand;
 import falcon.mvc.recipes.domains.Ingredient;
 import falcon.mvc.recipes.domains.Notes;
 import falcon.mvc.recipes.domains.Recipe;
@@ -29,6 +30,7 @@ public class IngredientServiceTestIT {
     private static final String INGREDIENT_NAME = "pepper";
     private static final String SECOND_INGREDIENT_NAME = "salt";
     private static final Long NON_EXISTING_INGREDIENT_ID = 123456L;
+    private static final Long IMPORTED_UOM_ID = 1L;
 
     private Ingredient ingredient;
 
@@ -37,6 +39,8 @@ public class IngredientServiceTestIT {
     private Recipe recipe;
 
     private Recipe savedRecipe;
+
+    private UnitOfMeasureCommand unitOfMeasureCommand;
 
     @Autowired
     private IngredientService ingredientService;
@@ -70,6 +74,9 @@ public class IngredientServiceTestIT {
         recipe.addIngredient(ingredientForRecipe);
         recipe.setNotes(new Notes());
         savedRecipe = recipeRepository.save(recipe);
+
+        unitOfMeasureCommand = new UnitOfMeasureCommand();
+        unitOfMeasureCommand.setId(IMPORTED_UOM_ID);
     }
 
     @Test
@@ -107,4 +114,19 @@ public class IngredientServiceTestIT {
         exceptionRule.expectMessage(exceptionMessage);
         ingredientService.getIngredientByRecipeIdAndIngredientId(savedRecipe.getId(), NON_EXISTING_INGREDIENT_ID);
     }
+
+    @Test
+    public void createOrUpdateIngredientCommand_Update() {
+            IngredientCommand ingredientUpdate = new IngredientCommand();
+            ingredientUpdate.setId(ingredientForRecipe.getId());
+            ingredientUpdate.setName(INGREDIENT_NAME);
+            ingredientUpdate.setUnitOfMeasure(unitOfMeasureCommand);
+            ingredientUpdate.setRecipeId(savedRecipe.getId());
+
+            IngredientCommand updatedIngredient = ingredientService.createOrUpdateIngredientCommand(ingredientUpdate);
+            assertNotNull(updatedIngredient);
+            assertEquals(savedRecipe.getId(), updatedIngredient.getRecipeId());
+            assertEquals(INGREDIENT_NAME, updatedIngredient.getName());
+    }
+    //TODO save ingredient tests
 }

@@ -10,6 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Slf4j
 @Service
@@ -31,19 +34,43 @@ public class UnitOfMeasureServiceImpl implements UnitOfMeasureService {
 
     @Override
     public UnitOfMeasureCommand getUnitOfMeasureByUnit(String unit) {
+        log.debug("Searching for unit of measure with name " + unit);
         Optional<UnitOfMeasure> unitOfMeasureOptional = unitOfMeasureRepository.findByUnit(unit);
         if (unitOfMeasureOptional.isPresent()) {
-            log.debug("Searching for unit of measure with name " + unit);
             return unitOfMeasureToUnitOfMeasureCommand.convert(unitOfMeasureOptional.get());
-        }else {
+        } else {
+            throw new RuntimeException("No such Unit of Measure!");
+        }
+    }
+
+    @Override
+    public UnitOfMeasureCommand getUnitOfMeasureById(Long id) {
+        log.debug("Searching for unit of measure with id " + id);
+        Optional<UnitOfMeasure> unitOfMeasureOptional = unitOfMeasureRepository.findById(id);
+        if (unitOfMeasureOptional.isPresent()) {
+            return unitOfMeasureToUnitOfMeasureCommand.convert(unitOfMeasureOptional.get());
+        } else {
             throw new RuntimeException("No such Unit of Measure!");
         }
     }
 
     @Override
     public UnitOfMeasureCommand createUnit(UnitOfMeasureCommand unit) {
+        unitOfMeasureRepository.findByUnit(unit.getUnit()).ifPresent(found -> {
+            throw new RuntimeException("Unit of measure already exist");
+        });
+
         log.debug("Saving new unit of measure " + unit);
+
         UnitOfMeasure savedUnitOfMeasure = unitOfMeasureRepository.save(unitOfMeasureCommandToUnitOfMeasure.convert(unit));
         return unitOfMeasureToUnitOfMeasureCommand.convert(savedUnitOfMeasure);
+    }
+
+    @Override
+    public Set<UnitOfMeasureCommand> getAllUnitOfMeasure() {
+        return StreamSupport.stream(unitOfMeasureRepository.findAll()
+                .spliterator(), false)
+                .map(unitOfMeasureToUnitOfMeasureCommand::convert)
+                .collect(Collectors.toSet());
     }
 }

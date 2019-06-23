@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css} "/>
+    <script th:href="@{/webjars/jquery/3.4.0/jquery.min.js} "></script>
+    <title>Ingredient Form</title>
+</head>
+<body>
+<div class="jumbotron">
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <form  th:object="${ingredient}" th:action="@{'/recipe/' + ${ingredient.getRecipeId()} + '/ingredient'} " method="post">
+                    <input type="hidden" th:field="*{id}"/>
+                <div class="card card-primary">
+                    <!--/*@thymesVar id="recipeNotes" type="falcon.mvc.recipes.commands.IngredientCommand"*/-->
+                    <div class="card-header">
+                        <h1 class="panel-title text-center">Edit Ingredient Information</h1>
+                    </div>
+
+                    <div class="card-block">
+                        <div class="row">
+                            <div class="col-md-3 form-group">
+                                <label>Ingredient:</label>
+                                <input type="text" class="form-control" th:field="*{name}"/>
+                            </div>
+
+                            <div class="col-md-3 form-group">
+                                <label>Amount:</label>
+                                <input type="number" class="form-control" th:field="*{amount}"/>
+                            </div>
+
+                            <div class="col-md-3 form-group">
+                                <label>Unit of measure:</label>
+                                <select class="form-control" name="unitOfMeasure.id">
+                                    <option th:each="uomEach : ${unitOfMeasureList}"
+                                            th:value="${uomEach.id}"
+                                            th:selected="${uomEach.id.equals(ingredient.unitOfMeasure.id)} "
+                                            th:text="${uomEach.unit}">Each</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-outline-success mb-2">Submit</button>
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
