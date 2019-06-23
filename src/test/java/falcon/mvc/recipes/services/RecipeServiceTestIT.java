@@ -48,6 +48,7 @@ public class RecipeServiceTestIT {
         recipeCommand.setNotes(new NotesCommand());
     }
 
+    @Transactional
     @Test
     public void getAllRecipes() {
         Recipe recipe = new Recipe();
@@ -64,14 +65,16 @@ public class RecipeServiceTestIT {
 
         recipeRepository.saveAll(recipesData);
 
-        List<RecipeCommand> recipes = recipeService.getAllRecipes();
+        Set<Recipe> recipesFromRepo = new HashSet<>();
+        recipeRepository.findAll().forEach(recipesFromRepo::add);
 
-        assertEquals(recipes.size(), 2);
+        List<RecipeCommand> recipes = recipeService.getAllRecipes();
+        assertEquals(recipes.size(), recipesFromRepo.size());
     }
 
     @Transactional
     @Test
-    public void saveRecipeCommand() throws Exception {
+    public void saveRecipeCommand() {
 
         Iterable<Recipe> recipes = recipeRepository.findAll();
         Recipe testRecipe = recipes.iterator().next();
@@ -116,13 +119,16 @@ public class RecipeServiceTestIT {
 
     @Test
     public void deleteRecipeById() {
-        RecipeCommand recipeForDelete = new RecipeCommand();
-        recipeForDelete.setNotes(new NotesCommand());
-        recipeForDelete.setId(RECIPE_FOR_DELETE_ID);
 
-        recipeService.saveRecipeCommand(recipeForDelete);
-        recipeService.deleteById(RECIPE_FOR_DELETE_ID);
+        Notes notes = new Notes();
+        notes.setRecipeNotes("Some Notes here");
 
-        assertFalse(recipeRepository.findById(RECIPE_FOR_DELETE_ID).isPresent());
+        Recipe recipe = new Recipe();
+        recipe.setNotes(notes);
+
+        Recipe savedRecipe = recipeRepository.save(recipe);
+        recipeService.deleteById(savedRecipe.getId());
+
+        assertFalse(recipeRepository.findById(savedRecipe.getId()).isPresent());
     }
 }

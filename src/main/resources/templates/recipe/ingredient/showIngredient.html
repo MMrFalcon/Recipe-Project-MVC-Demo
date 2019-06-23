@@ -9,6 +9,7 @@
     <title>Ingredient</title>
 </head>
 <body>
+<nav th:replace="fragments/header :: header"></nav>
 <div class="jumbotron">
     <div class="container">
         <div class="row justify-content-center">
@@ -33,6 +34,12 @@
                                 </tr>
 
                             </table>
+                        </div>
+                        <div class="col-4 mx-auto">
+                            <a class="btn btn-outline-primary btn-lg"
+                               th:href="@{'/recipe/' + ${ingredient.recipeId} + '/ingredients'}">
+                                Back To Ingredient List
+                            </a>
                         </div>
                     </div>
                 </div>

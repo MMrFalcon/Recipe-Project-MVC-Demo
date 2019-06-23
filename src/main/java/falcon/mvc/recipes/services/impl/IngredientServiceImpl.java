@@ -3,7 +3,6 @@ package falcon.mvc.recipes.services.impl;
 import falcon.mvc.recipes.commands.IngredientCommand;
 import falcon.mvc.recipes.commands.RecipeCommand;
 import falcon.mvc.recipes.converters.IngredientToIngredientCommand;
-import falcon.mvc.recipes.domains.Ingredient;
 import falcon.mvc.recipes.repositories.IngredientRepository;
 import falcon.mvc.recipes.services.IngredientService;
 import falcon.mvc.recipes.services.RecipeService;
@@ -20,7 +19,6 @@ public class IngredientServiceImpl implements IngredientService {
 
     private final IngredientRepository ingredientRepository;
     private final IngredientToIngredientCommand ingredientToIngredientCommand;
-
     private final RecipeService recipeService;
     private final UnitOfMeasureService unitOfMeasureService;
 
@@ -32,17 +30,6 @@ public class IngredientServiceImpl implements IngredientService {
         this.ingredientToIngredientCommand = ingredientToIngredientCommand;
         this.recipeService = recipeService;
         this.unitOfMeasureService = unitOfMeasureService;
-    }
-
-    @Override
-    public IngredientCommand getIngredientByName(String name) {
-        Optional<Ingredient> optionalIngredient = ingredientRepository.findByName(name);
-        if (optionalIngredient.isPresent()) {
-            log.debug("Searching for Ingredient with name " + name);
-            return ingredientToIngredientCommand.convert(optionalIngredient.get());
-        } else {
-            throw new RuntimeException("No such Ingredient!");
-        }
     }
 
     @Override
@@ -79,9 +66,7 @@ public class IngredientServiceImpl implements IngredientService {
 
         RecipeCommand savedRecipe = recipeService.saveRecipeCommand(recipeCommand);
 
-        return savedRecipe.getIngredients().stream()
-                .filter(recipeIngredient -> recipeIngredient.getId().equals(ingredientCommand.getId()))
-                .findFirst().orElseThrow(() -> new RuntimeException("Ingredient was not properly saved"));
+        return validSavedIngredientCommandInRecipe(ingredientCommand, savedRecipe);
     }
 
     private void updateIngredient(IngredientCommand existingIngredient, IngredientCommand updatedIngredientCommand) {
@@ -89,5 +74,17 @@ public class IngredientServiceImpl implements IngredientService {
         existingIngredient.setAmount(updatedIngredientCommand.getAmount());
         existingIngredient.setUnitOfMeasure(
                 unitOfMeasureService.getUnitOfMeasureById(updatedIngredientCommand.getUnitOfMeasure().getId()));
+    }
+
+    private IngredientCommand validSavedIngredientCommandInRecipe(IngredientCommand ingredientCommand,
+                                                                  RecipeCommand recipeCommand) {
+
+        Optional<IngredientCommand> savedIngredientCommand = recipeCommand.getIngredients().stream()
+                .filter(recipeIngredient -> recipeIngredient.getName().equals(ingredientCommand.getName()))
+                .filter(recipeIngredient -> recipeIngredient.getAmount().equals(ingredientCommand.getAmount()))
+                .filter(recipeIngredient -> recipeIngredient.getUnitOfMeasure().getId().equals(ingredientCommand.getUnitOfMeasure().getId()))
+                .findFirst();
+
+        return savedIngredientCommand.orElseThrow(() -> new RuntimeException("Ingredient was not properly saved"));
     }
 }

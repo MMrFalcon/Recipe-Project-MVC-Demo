@@ -14,39 +14,43 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-10">
-                <form  th:object="${ingredient}" th:action="@{'/recipe/' + ${ingredient.getRecipeId()} + '/ingredient'} " method="post">
+                <form th:object="${ingredient}" th:action="@{'/recipe/' + ${ingredient.getRecipeId()} + '/ingredient'} "
+                      method="post">
                     <input type="hidden" th:field="*{id}"/>
-                <div class="card card-primary">
-                    <!--/*@thymesVar id="recipeNotes" type="falcon.mvc.recipes.commands.IngredientCommand"*/-->
-                    <div class="card-header">
-                        <h1 class="panel-title text-center">Edit Ingredient Information</h1>
-                    </div>
+                    <div class="card card-primary">
+                        <!--/*@thymesVar id="recipeNotes" type="falcon.mvc.recipes.commands.IngredientCommand"*/-->
+                        <div class="card-header">
+                            <h1 class="panel-title text-center">Edit Ingredient Information</h1>
+                        </div>
 
-                    <div class="card-block">
-                        <div class="row">
-                            <div class="col-md-3 form-group">
-                                <label>Ingredient:</label>
-                                <input type="text" class="form-control" th:field="*{name}"/>
+                        <div class="card-block">
+                            <div class="row">
+                                <div class="col-md-3 form-group">
+                                    <label>Ingredient:</label>
+                                    <input type="text" class="form-control" th:field="*{name}"/>
+                                </div>
+
+                                <div class="col-md-3 form-group">
+                                    <label>Amount:</label>
+                                    <input type="number" class="form-control" th:field="*{amount}"/>
+                                </div>
+
+                                <div class="col-md-3 form-group">
+                                    <label>Unit of measure:</label>
+                                    <select class="form-control" name="unitOfMeasure.id">
+                                        <option th:each="uomEach : ${unitOfMeasureList}"
+                                                th:value="${uomEach.id}"
+                                                th:selected="${uomEach.id.equals(ingredient.unitOfMeasure.id)} "
+                                                th:text="${uomEach.unit}">Each
+                                        </option>
+                                    </select>
+                                </div>
                             </div>
-
-                            <div class="col-md-3 form-group">
-                                <label>Amount:</label>
-                                <input type="number" class="form-control" th:field="*{amount}"/>
-                            </div>
-
-                            <div class="col-md-3 form-group">
-                                <label>Unit of measure:</label>
-                                <select class="form-control" name="unitOfMeasure.id">
-                                    <option th:each="uomEach : ${unitOfMeasureList}"
-                                            th:value="${uomEach.id}"
-                                            th:selected="${uomEach.id.equals(ingredient.unitOfMeasure.id)} "
-                                            th:text="${uomEach.unit}">Each</option>
-                                </select>
+                            <div class="col-4 mx-auto">
+                                <button type="submit" class="btn btn-outline-success mb-2">Submit</button>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-outline-success mb-2">Submit</button>
                     </div>
-                </div>
                 </form>
             </div>
         </div>

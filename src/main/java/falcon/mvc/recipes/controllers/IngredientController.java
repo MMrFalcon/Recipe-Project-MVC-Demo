@@ -1,6 +1,8 @@
 package falcon.mvc.recipes.controllers;
 
 import falcon.mvc.recipes.commands.IngredientCommand;
+import falcon.mvc.recipes.commands.RecipeCommand;
+import falcon.mvc.recipes.commands.UnitOfMeasureCommand;
 import falcon.mvc.recipes.services.IngredientService;
 import falcon.mvc.recipes.services.RecipeService;
 import falcon.mvc.recipes.services.UnitOfMeasureService;
@@ -50,6 +52,23 @@ public class IngredientController {
 
         model.addAttribute("ingredient",
                 ingredientService.getIngredientByRecipeIdAndIngredientId(Long.valueOf(recipeId), Long.valueOf(ingredientId)));
+        model.addAttribute("unitOfMeasureList", unitOfMeasureService.getAllUnitOfMeasure());
+
+        return "recipe/ingredient/ingredientForm";
+    }
+
+    @GetMapping
+    @RequestMapping("/{recipeId}/ingredient/new")
+    public String showNewIngredientForm(@PathVariable String recipeId, Model model) {
+
+        RecipeCommand recipeCommand = recipeService.getRecipeCommandById(Long.valueOf(recipeId));
+
+        IngredientCommand ingredientCommand = new IngredientCommand();
+        ingredientCommand.setRecipeId(recipeCommand.getId());
+
+        model.addAttribute("ingredient", ingredientCommand);
+
+        ingredientCommand.setUnitOfMeasure(new UnitOfMeasureCommand());
         model.addAttribute("unitOfMeasureList", unitOfMeasureService.getAllUnitOfMeasure());
 
         return "recipe/ingredient/ingredientForm";

@@ -31,6 +31,7 @@ public class IngredientControllerTest {
     private RecipeCommand recipeCommand;
     private IngredientCommand ingredientCommand;
     private Set<UnitOfMeasureCommand> unitOfMeasureCommandSet;
+
     @Mock
     private RecipeService recipeService;
 
@@ -104,6 +105,19 @@ public class IngredientControllerTest {
     }
 
     @Test
+    public void showNewIngredientForm() throws Exception {
+
+        when(recipeService.getRecipeCommandById(RECIPE_COMMAND_ID)).thenReturn(recipeCommand);
+
+        mockMvc.perform(get("/recipe/1/ingredient/new"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("recipe/ingredient/ingredientForm"))
+                .andExpect(model().attributeExists("ingredient", "unitOfMeasureList"));
+
+        verify(recipeService, times(1)).getRecipeCommandById(RECIPE_COMMAND_ID);
+    }
+
+    @Test
     public void saveOrUpdateIngredient() throws Exception {
 
         when(ingredientService.createOrUpdateIngredientCommand(any())).thenReturn(ingredientCommand);
@@ -115,4 +129,5 @@ public class IngredientControllerTest {
 
         verify(ingredientService, times(1)).createOrUpdateIngredientCommand(any());
     }
+
 }
