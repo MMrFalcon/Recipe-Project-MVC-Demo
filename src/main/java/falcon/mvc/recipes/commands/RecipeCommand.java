@@ -5,8 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Comparator;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 @Getter
 @Setter
@@ -18,8 +19,8 @@ public class RecipeCommand {
     private Integer cookTime;
     private Integer servings;
     private String directions;
-    private Set<IngredientCommand> ingredients = new HashSet<>();
+    private SortedSet<IngredientCommand> ingredients = new TreeSet<>(Comparator.comparing(IngredientCommand::getId));
     private Difficulty difficulty;
     private NotesCommand notes;
-    private Set<CategoryCommand> categories = new HashSet<>();
+    private SortedSet<CategoryCommand> categories = new TreeSet<>(Comparator.comparing(CategoryCommand::getId));
 }
