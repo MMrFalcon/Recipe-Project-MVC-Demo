@@ -14,11 +14,17 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-10">
+                <!--/*@thymesVar id="recipeNotes" type="falcon.mvc.recipes.domains"*/-->
                 <div class="card card-primary">
-                    <!--/*@thymesVar id="recipeNotes" type="falcon.mvc.recipes.domains"*/-->
                     <div class="card-header">
                         <h1 class="panel-title text-center" th:text="${recipe.description}">Description</h1>
+                        <div class="row justify-content-center mt-2">
+                            <a class="btn btn-outline-primary" th:href="@{'/recipe/' + ${recipe.id} + '/image'}">Change
+                                Image</a>
+                        </div>
                     </div>
+                    <img class="card-img-top" src="../../static/images/guacamole.jpg"
+                         th:src="@{/images/guacamole.jpg}" alt="Guacamole picture">
                     <div class="card-block">
                         <div class="row justify-content-center">
                             <th:block th:each="category:${recipe.categories}">
@@ -45,7 +51,8 @@
                                 </ul>
                             </div>
                             <div class="p-2">
-                                <a href="#" th:href="@{'/recipe/' + ${recipe.id} + '/ingredients'}">View</a>
+                                <a class="btn btn-outline-primary"
+                                   th:href="@{'/recipe/' + ${recipe.id} + '/ingredients'}">View</a>
                             </div>
                         </div>
                     </div>
