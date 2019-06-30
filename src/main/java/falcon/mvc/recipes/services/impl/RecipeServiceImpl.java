@@ -69,4 +69,20 @@ public class RecipeServiceImpl implements RecipeService {
         recipeRepository.deleteById(recipeId);
     }
 
+    @Override
+    public byte[] getUnboxedImage(RecipeCommand recipeCommand) {
+        if (recipeCommand.getImage() != null) {
+            byte[] unboxedImage= new byte[recipeCommand.getImage().length];
+            int arrayIndex = 0;
+
+            for (Byte wrappedByte : recipeCommand.getImage()){
+                unboxedImage[arrayIndex++] = wrappedByte; 
+            }
+
+            return unboxedImage;
+        } else {
+            return new byte[0];
+        }
+    }
+
 }

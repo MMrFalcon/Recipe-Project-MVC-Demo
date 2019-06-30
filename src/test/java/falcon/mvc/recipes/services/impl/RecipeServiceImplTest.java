@@ -23,7 +23,7 @@ public class RecipeServiceImplTest {
     private RecipeServiceImpl recipeService;
     private static final Long RECIPE_ID = 1L;
     private static final String RECIPE_DESCRIPTION = "Description";
-
+    private static final byte[] RECIPE_IMAGE = "Image".getBytes();
     private Recipe recipeFromRepository;
     private RecipeCommand recipeCommand;
 
@@ -46,9 +46,16 @@ public class RecipeServiceImplTest {
         recipeFromRepository.setId(RECIPE_ID);
         recipeFromRepository.setDescription(RECIPE_DESCRIPTION);
 
+        Byte[] wrappedImage = new Byte[RECIPE_IMAGE.length];
+        int wrappedImageIndex = 0;
+        for (byte b : RECIPE_IMAGE) {
+            wrappedImage[wrappedImageIndex++] = b;
+        }
+
         recipeCommand = new RecipeCommand();
         recipeCommand.setId(RECIPE_ID);
         recipeCommand.setDescription(RECIPE_DESCRIPTION);
+        recipeCommand.setImage(wrappedImage);
     }
 
     @Test
@@ -100,5 +107,11 @@ public class RecipeServiceImplTest {
         recipeService.deleteById(RECIPE_ID);
 
         verify(recipeRepository, times(1)).deleteById(anyLong());
+    }
+
+    @Test
+    public void getUnboxedImage() {
+        byte[] unboxedImage = recipeService.getUnboxedImage(recipeCommand);
+        assertEquals(RECIPE_IMAGE.length, unboxedImage.length);
     }
 }

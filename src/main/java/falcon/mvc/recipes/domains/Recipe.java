@@ -22,7 +22,7 @@ public class Recipe {
     private String directions;
 
     @Lob
-    private Byte[] img;
+    private Byte[] image;
 
     @OneToOne(cascade = CascadeType.ALL)
     private Notes notes;

@@ -19,6 +19,7 @@ public class RecipeCommand {
     private Integer cookTime;
     private Integer servings;
     private String directions;
+    private Byte[] image;
     private SortedSet<IngredientCommand> ingredients = new TreeSet<>(Comparator.comparing(IngredientCommand::getId));
     private Difficulty difficulty;
     private NotesCommand notes;

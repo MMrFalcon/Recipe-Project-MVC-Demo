@@ -1,7 +1,5 @@
 package falcon.mvc.recipes.services;
 
-import falcon.mvc.recipes.domains.Notes;
-import falcon.mvc.recipes.domains.Recipe;
 import falcon.mvc.recipes.repositories.RecipeRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,8 +18,6 @@ public class ImageServiceTestIT {
 
     private static final Long RECIPE_ID = 1L;
 
-    private Recipe recipe;
-
     @Autowired
     private ImageService imageService;
 
@@ -30,10 +26,6 @@ public class ImageServiceTestIT {
 
     @Before
     public void setUp() throws Exception {
-        recipe = new Recipe();
-        recipe.setId(RECIPE_ID);
-        recipe.setNotes(new Notes());
-
     }
 
     @Test
@@ -43,6 +35,6 @@ public class ImageServiceTestIT {
 
         imageService.addImage(RECIPE_ID, multipartFile);
 
-        assertEquals(recipeRepository.findById(RECIPE_ID).get().getImg().length, multipartFile.getBytes().length);
+        assertEquals(recipeRepository.findById(RECIPE_ID).get().getImage().length, multipartFile.getBytes().length);
     }
 }

@@ -9,4 +9,5 @@ public interface RecipeService {
     RecipeCommand saveRecipeCommand(RecipeCommand recipeCommand);
     RecipeCommand getRecipeCommandById(Long recipeId);
     void deleteById(Long id);
+    byte[] getUnboxedImage(RecipeCommand recipeCommand);
 }

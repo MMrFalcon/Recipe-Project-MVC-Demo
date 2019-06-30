@@ -1,36 +1,32 @@
 package falcon.mvc.recipes.services.impl;
 
-import falcon.mvc.recipes.domains.Recipe;
-import falcon.mvc.recipes.repositories.RecipeRepository;
+import falcon.mvc.recipes.commands.RecipeCommand;
 import falcon.mvc.recipes.services.ImageService;
+import falcon.mvc.recipes.services.RecipeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Optional;
 
 @Service
 @Slf4j
 public class ImageServiceImpl implements ImageService {
 
-    private final RecipeRepository recipeRepository;
+    private final RecipeService recipeService;
 
-    public ImageServiceImpl(RecipeRepository recipeRepository) {
-        this.recipeRepository = recipeRepository;
+    public ImageServiceImpl(RecipeService recipeService) {
+        this.recipeService = recipeService;
     }
 
     @Override
     @Transactional
     public void addImage(Long recipeId, MultipartFile file){
         try {
-            Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
-            log.debug("Searching for recipe with id: " + recipeId);
-            if (!recipeOptional.isPresent())
-                throw new RuntimeException("Recipe not found");
+            log.debug("Adding new image to the recipe");
+            RecipeCommand recipeCommand = recipeService.getRecipeCommandById(recipeId);
 
-            Recipe foundRecipe = recipeOptional.get();
             Byte[] imageWrapper =  new Byte[file.getBytes().length];
             int arrayIndexNumber = 0;
 
@@ -38,9 +34,9 @@ public class ImageServiceImpl implements ImageService {
                 imageWrapper[arrayIndexNumber++] = b;
             }
 
-            foundRecipe.setImg(imageWrapper);
-            log.debug("New image was added to the recipe");
-            recipeRepository.save(foundRecipe);
+            recipeCommand.setImage(imageWrapper);
+            recipeService.saveRecipeCommand(recipeCommand);
+            log.debug("Image was successfully saved");
         } catch (IOException ex) {
             log.error("Cannot save image", ex);
         }

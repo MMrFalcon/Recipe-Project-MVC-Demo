@@ -23,8 +23,8 @@
                                 Image</a>
                         </div>
                     </div>
-                    <img class="card-img-top" src="../../static/images/guacamole.jpg"
-                         th:src="@{/images/guacamole.jpg}" alt="Guacamole picture">
+                    <img class="card-img-top"
+                         th:src="@{'/recipe/' + ${recipe.id} + '/render/image'}" alt="Guacamole picture">
                     <div class="card-block">
                         <div class="row justify-content-center">
                             <th:block th:each="category:${recipe.categories}">

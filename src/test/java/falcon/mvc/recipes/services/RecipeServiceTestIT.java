@@ -29,6 +29,7 @@ public class RecipeServiceTestIT {
     private static final String NEW_DESCRIPTION = "New Description";
     private static final Long RECIPE_ID = 1L;
     private static final Long RECIPE_FOR_DELETE_ID = 2L;
+    private static final byte[] RECIPE_IMAGE = "Image".getBytes();
 
     private RecipeCommand recipeCommand;
 
@@ -46,6 +47,14 @@ public class RecipeServiceTestIT {
         recipeCommand = new RecipeCommand();
         recipeCommand.setId(RECIPE_ID);
         recipeCommand.setNotes(new NotesCommand());
+
+        Byte[] wrappedImage = new Byte[RECIPE_IMAGE.length];
+        int wrappedImageIndex = 0;
+        for (byte b : RECIPE_IMAGE) {
+            wrappedImage[wrappedImageIndex++] = b;
+        }
+
+        recipeCommand.setImage(wrappedImage);
     }
 
     @Transactional
@@ -130,5 +139,11 @@ public class RecipeServiceTestIT {
         recipeService.deleteById(savedRecipe.getId());
 
         assertFalse(recipeRepository.findById(savedRecipe.getId()).isPresent());
+    }
+
+    @Test
+    public void getUnboxedImage() {
+        byte[] wrappedImage = recipeService.getUnboxedImage(recipeCommand);
+        assertEquals(RECIPE_IMAGE.length, wrappedImage.length);
     }
 }
