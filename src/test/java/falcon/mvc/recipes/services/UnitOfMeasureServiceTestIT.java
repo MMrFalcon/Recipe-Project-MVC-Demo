@@ -2,6 +2,8 @@ package falcon.mvc.recipes.services;
 
 import falcon.mvc.recipes.commands.UnitOfMeasureCommand;
 import falcon.mvc.recipes.domains.UnitOfMeasure;
+import falcon.mvc.recipes.exceptions.AlreadyExistException;
+import falcon.mvc.recipes.exceptions.NotFoundException;
 import falcon.mvc.recipes.repositories.UnitOfMeasureRepository;
 import org.junit.Before;
 import org.junit.Rule;
@@ -60,7 +62,7 @@ public class UnitOfMeasureServiceTestIT {
     @Test
     public void getUnitOfMeasureByUnitNotPresent() {
         final String exceptionMessage = "No such Unit of Measure!";
-        exceptionRule.expect(RuntimeException.class);
+        exceptionRule.expect(NotFoundException.class);
         exceptionRule.expectMessage(exceptionMessage);
         unitOfMeasureService.getUnitOfMeasureByUnit("Does not exist");
     }
@@ -77,7 +79,7 @@ public class UnitOfMeasureServiceTestIT {
     @Test
     public void createUnitAlreadyExist() {
         final String exceptionMessage = "Unit of measure already exist";
-        exceptionRule.expect(RuntimeException.class);
+        exceptionRule.expect(AlreadyExistException.class);
         exceptionRule.expectMessage(exceptionMessage);
         unitOfMeasureService.createUnit(unitOfMeasureCommandAlreadyInSystem);
     }
@@ -101,7 +103,7 @@ public class UnitOfMeasureServiceTestIT {
     @Test
     public void getUnitOfMeasureByIdNotPresent() {
         final String exceptionMessage = "No such Unit of Measure!";
-        exceptionRule.expect(RuntimeException.class);
+        exceptionRule.expect(NotFoundException.class);
         exceptionRule.expectMessage(exceptionMessage);
         unitOfMeasureService.getUnitOfMeasureById(NOT_EXISTING_UOM_ID);
     }

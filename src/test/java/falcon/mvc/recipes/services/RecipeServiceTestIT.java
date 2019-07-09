@@ -5,6 +5,7 @@ import falcon.mvc.recipes.commands.RecipeCommand;
 import falcon.mvc.recipes.converters.RecipeToRecipeCommand;
 import falcon.mvc.recipes.domains.Notes;
 import falcon.mvc.recipes.domains.Recipe;
+import falcon.mvc.recipes.exceptions.NotFoundException;
 import falcon.mvc.recipes.repositories.RecipeRepository;
 import org.junit.Before;
 import org.junit.Rule;
@@ -119,7 +120,7 @@ public class RecipeServiceTestIT {
     @Test
     public void getRecipeCommandByIdNotPresent() {
         final String exceptionMessage = "Recipe not found";
-        exceptionRule.expect(RuntimeException.class);
+        exceptionRule.expect(NotFoundException.class);
         exceptionRule.expectMessage(exceptionMessage);
 
         recipeService.saveRecipeCommand(recipeCommand);

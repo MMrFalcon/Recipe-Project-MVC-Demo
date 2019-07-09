@@ -4,6 +4,7 @@ import falcon.mvc.recipes.commands.RecipeCommand;
 import falcon.mvc.recipes.converters.RecipeCommandToRecipe;
 import falcon.mvc.recipes.converters.RecipeToRecipeCommand;
 import falcon.mvc.recipes.domains.Recipe;
+import falcon.mvc.recipes.exceptions.NotFoundException;
 import falcon.mvc.recipes.repositories.RecipeRepository;
 import falcon.mvc.recipes.services.RecipeService;
 import lombok.extern.slf4j.Slf4j;
@@ -58,7 +59,7 @@ public class RecipeServiceImpl implements RecipeService {
         Optional<Recipe> recipe = recipeRepository.findById(recipeId);
         log.debug("Searching for recipe with id: " + recipeId);
         if (!recipe.isPresent())
-            throw new RuntimeException("Recipe not found");
+            throw new NotFoundException("Recipe not found");
         log.debug("Recipe was found: " + recipe.get());
         return recipeToRecipeCommand.convert(recipe.get());
     }

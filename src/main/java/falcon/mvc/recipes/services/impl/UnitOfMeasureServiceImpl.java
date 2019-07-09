@@ -4,6 +4,8 @@ import falcon.mvc.recipes.commands.UnitOfMeasureCommand;
 import falcon.mvc.recipes.converters.UnitOfMeasureCommandToUnitOfMeasure;
 import falcon.mvc.recipes.converters.UnitOfMeasureToUnitOfMeasureCommand;
 import falcon.mvc.recipes.domains.UnitOfMeasure;
+import falcon.mvc.recipes.exceptions.AlreadyExistException;
+import falcon.mvc.recipes.exceptions.NotFoundException;
 import falcon.mvc.recipes.repositories.UnitOfMeasureRepository;
 import falcon.mvc.recipes.services.UnitOfMeasureService;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +41,7 @@ public class UnitOfMeasureServiceImpl implements UnitOfMeasureService {
         if (unitOfMeasureOptional.isPresent()) {
             return unitOfMeasureToUnitOfMeasureCommand.convert(unitOfMeasureOptional.get());
         } else {
-            throw new RuntimeException("No such Unit of Measure!");
+            throw new NotFoundException("No such Unit of Measure!");
         }
     }
 
@@ -50,14 +52,14 @@ public class UnitOfMeasureServiceImpl implements UnitOfMeasureService {
         if (unitOfMeasureOptional.isPresent()) {
             return unitOfMeasureToUnitOfMeasureCommand.convert(unitOfMeasureOptional.get());
         } else {
-            throw new RuntimeException("No such Unit of Measure!");
+            throw new NotFoundException("No such Unit of Measure!");
         }
     }
 
     @Override
     public UnitOfMeasureCommand createUnit(UnitOfMeasureCommand unit) {
         unitOfMeasureRepository.findByUnit(unit.getUnit()).ifPresent(found -> {
-            throw new RuntimeException("Unit of measure already exist");
+            throw new AlreadyExistException("Unit of measure already exist");
         });
 
         log.debug("Saving new unit of measure " + unit);

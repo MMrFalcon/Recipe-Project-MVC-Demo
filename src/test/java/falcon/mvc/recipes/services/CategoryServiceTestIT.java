@@ -1,6 +1,7 @@
 package falcon.mvc.recipes.services;
 
 import falcon.mvc.recipes.commands.CategoryCommand;
+import falcon.mvc.recipes.exceptions.NotFoundException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -45,7 +46,7 @@ public class CategoryServiceTestIT {
     @Test
     public void getCategoryByDescriptionNotPresent() {
         final String exceptionMessage = "No such category";
-        exceptionRule.expect(RuntimeException.class);
+        exceptionRule.expect(NotFoundException.class);
         exceptionRule.expectMessage(exceptionMessage);
         categoryService.getCategoryByDescription("Not Exist");
     }

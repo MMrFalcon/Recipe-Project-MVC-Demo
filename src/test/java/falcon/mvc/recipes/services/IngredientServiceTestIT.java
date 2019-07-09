@@ -6,6 +6,7 @@ import falcon.mvc.recipes.domains.Ingredient;
 import falcon.mvc.recipes.domains.Notes;
 import falcon.mvc.recipes.domains.Recipe;
 import falcon.mvc.recipes.domains.UnitOfMeasure;
+import falcon.mvc.recipes.exceptions.NotFoundException;
 import falcon.mvc.recipes.repositories.IngredientRepository;
 import falcon.mvc.recipes.repositories.RecipeRepository;
 import falcon.mvc.recipes.repositories.UnitOfMeasureRepository;
@@ -87,7 +88,7 @@ public class IngredientServiceTestIT {
     @Test
     public void getIngredientByRecipeIdAndIngredientIdNotPresent() {
         final String exceptionMessage = "Ingredient not found";
-        exceptionRule.expect(RuntimeException.class);
+        exceptionRule.expect(NotFoundException.class);
         exceptionRule.expectMessage(exceptionMessage);
         ingredientService.getIngredientByRecipeIdAndIngredientId(savedRecipe.getId(), NON_EXISTING_INGREDIENT_ID);
     }

@@ -4,6 +4,7 @@ import falcon.mvc.recipes.commands.CategoryCommand;
 import falcon.mvc.recipes.converters.CategoryCommandToCategory;
 import falcon.mvc.recipes.converters.CategoryToCategoryCommand;
 import falcon.mvc.recipes.domains.Category;
+import falcon.mvc.recipes.exceptions.NotFoundException;
 import falcon.mvc.recipes.repositories.CategoryRepository;
 import falcon.mvc.recipes.services.CategoryService;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +36,7 @@ public class CategoryServiceImpl implements CategoryService {
             log.debug("Searching for category...");
             return categoryToCategoryCommand.convert(optionalCategory.get());
         }else {
-            throw new RuntimeException("No such category");
+            throw new NotFoundException("No such category");
         }
     }
 

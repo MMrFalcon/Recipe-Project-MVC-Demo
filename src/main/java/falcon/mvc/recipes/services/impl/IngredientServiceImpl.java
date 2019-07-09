@@ -3,6 +3,7 @@ package falcon.mvc.recipes.services.impl;
 import falcon.mvc.recipes.commands.IngredientCommand;
 import falcon.mvc.recipes.commands.RecipeCommand;
 import falcon.mvc.recipes.converters.IngredientToIngredientCommand;
+import falcon.mvc.recipes.exceptions.NotFoundException;
 import falcon.mvc.recipes.repositories.IngredientRepository;
 import falcon.mvc.recipes.services.IngredientService;
 import falcon.mvc.recipes.services.RecipeService;
@@ -41,7 +42,7 @@ public class IngredientServiceImpl implements IngredientService {
                 .filter(ingredient -> ingredient.getId().equals(ingredientId)).findFirst();
 
         if (!ingredientCommand.isPresent())
-            throw new RuntimeException("Ingredient not found");
+            throw new NotFoundException("Ingredient not found");
 
         return ingredientCommand.get();
     }
