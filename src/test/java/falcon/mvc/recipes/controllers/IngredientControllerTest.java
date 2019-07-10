@@ -147,6 +147,7 @@ public class IngredientControllerTest {
 
         mockMvc.perform(get("/recipe/1/ingredient/2/show"))
                 .andExpect(status().isNotFound())
+                .andExpect(model().attributeExists("exception"))
                 .andExpect(view().name("notFoundExceptionView"));
     }
 
@@ -157,6 +158,23 @@ public class IngredientControllerTest {
 
         mockMvc.perform(get("/recipe/1/ingredient/2/update"))
                 .andExpect(status().isNotFound())
+                .andExpect(model().attributeExists("exception"))
                 .andExpect(view().name("notFoundExceptionView"));
+    }
+
+    @Test
+    public void handleNumberFormatForShowRequest() throws Exception {
+        mockMvc.perform(get("/recipe/1/ingredient/asd/show"))
+                .andExpect(status().isBadRequest())
+                .andExpect(model().attributeExists("exception"))
+                .andExpect(view().name("numberFormatExceptionView"));
+    }
+
+    @Test
+    public void handleNumberFormatForUpdateRequest() throws Exception {
+        mockMvc.perform(get("/recipe/1/ingredient/asd/update"))
+                .andExpect(status().isBadRequest())
+                .andExpect(model().attributeExists("exception"))
+                .andExpect(view().name("numberFormatExceptionView"));
     }
 }

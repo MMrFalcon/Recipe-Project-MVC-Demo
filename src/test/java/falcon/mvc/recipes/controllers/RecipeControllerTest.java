@@ -99,6 +99,7 @@ public class RecipeControllerTest {
         when(recipeService.getRecipeCommandById(anyLong())).thenThrow(NotFoundException.class);
         mockMvc.perform(get("/recipe/1/show"))
                 .andExpect(status().isNotFound())
+                .andExpect(model().attributeExists("exception"))
                 .andExpect(view().name("notFoundExceptionView"));
     }
 
@@ -106,8 +107,24 @@ public class RecipeControllerTest {
     public void handleNotFoundForUpdateRequest() throws Exception {
         when(recipeService.getRecipeCommandById(anyLong())).thenThrow(NotFoundException.class);
         mockMvc.perform(get("/recipe/1/update"))
+                .andExpect(model().attributeExists("exception"))
                 .andExpect(status().isNotFound())
                 .andExpect(view().name("notFoundExceptionView"));
     }
 
+    @Test
+    public void handleNumberFormatForShowRequest() throws Exception {
+        mockMvc.perform(get("/recipe/asd/show"))
+                .andExpect(status().isBadRequest())
+                .andExpect(model().attributeExists("exception"))
+                .andExpect(view().name("numberFormatExceptionView"));
+    }
+
+    @Test
+    public void handleNumberFormatForUpdateRequest() throws Exception {
+        mockMvc.perform(get("/recipe/asd/update"))
+                .andExpect(status().isBadRequest())
+                .andExpect(model().attributeExists("exception"))
+                .andExpect(view().name("numberFormatExceptionView"));
+    }
 }
