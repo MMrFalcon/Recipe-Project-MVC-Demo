@@ -1,7 +1,9 @@
 package falcon.mvc.recipes.controllers;
 
 import falcon.mvc.recipes.commands.RecipeCommand;
+import falcon.mvc.recipes.exceptions.NotFoundException;
 import falcon.mvc.recipes.services.RecipeService;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -46,5 +48,11 @@ public class RecipeController {
     public String deleteRecipe(@PathVariable String id) {
         recipeService.deleteById(Long.valueOf(id));
         return "redirect:/index";
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NotFoundException.class)
+    public String handleNotFound() {
+        return "notFoundExceptionView";
     }
 }

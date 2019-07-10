@@ -1,6 +1,7 @@
 package falcon.mvc.recipes.controllers;
 
 import falcon.mvc.recipes.commands.RecipeCommand;
+import falcon.mvc.recipes.exceptions.NotFoundException;
 import falcon.mvc.recipes.services.RecipeService;
 import org.junit.Before;
 import org.junit.Test;
@@ -92,4 +93,21 @@ public class RecipeControllerTest {
 
         verify(recipeService, times(1)).deleteById(anyLong());
     }
+
+    @Test
+    public void handleNotFoundForShowRequest() throws Exception {
+        when(recipeService.getRecipeCommandById(anyLong())).thenThrow(NotFoundException.class);
+        mockMvc.perform(get("/recipe/1/show"))
+                .andExpect(status().isNotFound())
+                .andExpect(view().name("notFoundExceptionView"));
+    }
+
+    @Test
+    public void handleNotFoundForUpdateRequest() throws Exception {
+        when(recipeService.getRecipeCommandById(anyLong())).thenThrow(NotFoundException.class);
+        mockMvc.perform(get("/recipe/1/update"))
+                .andExpect(status().isNotFound())
+                .andExpect(view().name("notFoundExceptionView"));
+    }
+
 }

@@ -3,6 +3,7 @@ package falcon.mvc.recipes.controllers;
 import falcon.mvc.recipes.commands.IngredientCommand;
 import falcon.mvc.recipes.commands.RecipeCommand;
 import falcon.mvc.recipes.commands.UnitOfMeasureCommand;
+import falcon.mvc.recipes.exceptions.NotFoundException;
 import falcon.mvc.recipes.services.IngredientService;
 import falcon.mvc.recipes.services.RecipeService;
 import falcon.mvc.recipes.services.UnitOfMeasureService;
@@ -137,5 +138,25 @@ public class IngredientControllerTest {
                 .andExpect(view().name("redirect:/recipe/1/ingredients"));
 
         verify(ingredientService, times(1)).deleteIngredientById(anyLong());
+    }
+
+    @Test
+    public void handleNotFoundForShowRequest() throws Exception {
+        when(ingredientService.getIngredientByRecipeIdAndIngredientId(anyLong(), anyLong()))
+                .thenThrow(NotFoundException.class);
+
+        mockMvc.perform(get("/recipe/1/ingredient/2/show"))
+                .andExpect(status().isNotFound())
+                .andExpect(view().name("notFoundExceptionView"));
+    }
+
+    @Test
+    public void handleNotFoundForUpdateRequest() throws Exception {
+        when(ingredientService.getIngredientByRecipeIdAndIngredientId(anyLong(), anyLong()))
+                .thenThrow(NotFoundException.class);
+
+        mockMvc.perform(get("/recipe/1/ingredient/2/update"))
+                .andExpect(status().isNotFound())
+                .andExpect(view().name("notFoundExceptionView"));
     }
 }

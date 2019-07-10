@@ -3,9 +3,11 @@ package falcon.mvc.recipes.controllers;
 import falcon.mvc.recipes.commands.IngredientCommand;
 import falcon.mvc.recipes.commands.RecipeCommand;
 import falcon.mvc.recipes.commands.UnitOfMeasureCommand;
+import falcon.mvc.recipes.exceptions.NotFoundException;
 import falcon.mvc.recipes.services.IngredientService;
 import falcon.mvc.recipes.services.RecipeService;
 import falcon.mvc.recipes.services.UnitOfMeasureService;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -82,5 +84,11 @@ public class IngredientController {
     public String deleteIngredient(@PathVariable String recipeId, @PathVariable String ingredientId) {
         ingredientService.deleteIngredientById(Long.valueOf(ingredientId));
         return "redirect:/recipe/" + recipeId + "/ingredients";
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NotFoundException.class)
+    public String handleNotFound() {
+        return "notFoundExceptionView";
     }
 }
