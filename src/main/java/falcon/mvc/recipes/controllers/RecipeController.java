@@ -57,10 +57,4 @@ public class RecipeController {
         return "notFoundExceptionView";
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(NumberFormatException.class)
-    public String handleNumberFormat(Exception exception, Model model) {
-        model.addAttribute("exception", exception);
-        return "numberFormatExceptionView";
-    }
 }
