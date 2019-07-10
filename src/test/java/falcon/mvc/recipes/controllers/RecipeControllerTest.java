@@ -21,6 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class RecipeControllerTest {
 
     private static final Long RECIPE_COMMAND_ID = 1L;
+    private static final String RECIPE_FORM_URL = "recipe/recipeForm";
 
     private RecipeCommand recipeCommand;
 
@@ -57,7 +58,7 @@ public class RecipeControllerTest {
 
         mockMvc.perform(get("/recipe/new"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("recipe/recipeForm"))
+                .andExpect(view().name(RECIPE_FORM_URL))
                 .andExpect(model().attributeExists("recipe"));
     }
 
@@ -71,10 +72,28 @@ public class RecipeControllerTest {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("id", "")
                 .param("description", "some string")
+                .param("directions", "some directions")
         )
                 .andExpect(status().isFound())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/recipe/1/show/"));
+    }
+
+    @Test
+    public void saveOrUpdateRecipeValidationFail() throws Exception {
+        RecipeCommand command = new RecipeCommand();
+        command.setId(2L);
+
+        when(recipeService.saveRecipeCommand(any())).thenReturn(command);
+
+        mockMvc.perform(post("/recipe")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id", "")
+
+        )
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("recipe"))
+                .andExpect(view().name(RECIPE_FORM_URL));
     }
 
     @Test
@@ -83,7 +102,8 @@ public class RecipeControllerTest {
 
         mockMvc.perform(get("/recipe/1/update"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("recipe/recipeForm"))
+                .andExpect(view().name(RECIPE_FORM_URL))
+                .andExpect(view().name(RECIPE_FORM_URL))
                 .andExpect(model().attributeExists("recipe"));
     }
 

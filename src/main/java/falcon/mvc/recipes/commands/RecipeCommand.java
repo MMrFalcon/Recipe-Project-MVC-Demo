@@ -5,6 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.Comparator;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -14,11 +18,26 @@ import java.util.TreeSet;
 @NoArgsConstructor
 public class RecipeCommand {
     private Long id;
+
+    @NotBlank
+    @Size(min = 3, max = 255)
     private String description;
+
+    @Min(1)
+    @Max(999)
     private Integer prepTime;
+
+    @Min(1)
+    @Max(999)
     private Integer cookTime;
+
+    @Min(1)
+    @Max(999)
     private Integer servings;
+
+    @NotBlank
     private String directions;
+
     private Byte[] image;
     private SortedSet<IngredientCommand> ingredients = new TreeSet<>(Comparator.comparing(IngredientCommand::getId));
     private Difficulty difficulty;

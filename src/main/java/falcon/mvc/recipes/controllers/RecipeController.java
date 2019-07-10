@@ -3,15 +3,21 @@ package falcon.mvc.recipes.controllers;
 import falcon.mvc.recipes.commands.RecipeCommand;
 import falcon.mvc.recipes.exceptions.NotFoundException;
 import falcon.mvc.recipes.services.RecipeService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/recipe")
+@Slf4j
 public class RecipeController {
 
+    private static final String RECIPE_FORM_URL = "recipe/recipeForm";
     private final RecipeService recipeService;
 
     public RecipeController(RecipeService recipeService) {
@@ -28,19 +34,24 @@ public class RecipeController {
     public String getNewRecipeForm(Model model) {
         model.addAttribute("recipe", new RecipeCommand());
 
-        return "recipe/recipeForm";
+        return RECIPE_FORM_URL;
     }
 
     @GetMapping("/{id}/update")
     public String updateRecipe(@PathVariable String id, Model model){
         model.addAttribute("recipe", recipeService.getRecipeCommandById(Long.valueOf(id)));
-        return  "recipe/recipeForm";
+        return  RECIPE_FORM_URL;
     }
 
     @PostMapping
-    public String saveOrUpdateRecipe(@ModelAttribute RecipeCommand recipeCommand) {
-        RecipeCommand savedRecipe  =  recipeService.saveRecipeCommand(recipeCommand);
+    public String saveOrUpdateRecipe(@Valid @ModelAttribute("recipe") RecipeCommand recipeCommand, BindingResult bindingResult) {
 
+        if(bindingResult.hasErrors()){
+            bindingResult.getAllErrors().forEach(objectError -> log.debug(objectError.toString()));
+            return RECIPE_FORM_URL;
+        }
+
+        RecipeCommand savedRecipe  =  recipeService.saveRecipeCommand(recipeCommand);
         return "redirect:/recipe/" + savedRecipe.getId() + "/show/";
     }
 
