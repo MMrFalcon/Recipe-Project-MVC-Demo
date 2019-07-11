@@ -36,6 +36,7 @@ public class RecipeCommand {
     private Integer servings;
 
     @NotBlank
+    @Size(min = 3, max = 255)
     private String directions;
 
     private Byte[] image;
