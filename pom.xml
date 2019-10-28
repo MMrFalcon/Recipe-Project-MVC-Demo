@@ -11,6 +11,7 @@
     <groupId>falcon.mvc</groupId>
     <artifactId>recipes</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>war</packaging>
     <name>recipes</name>
     <description>Example of Spring-MVC use</description>
 
